@@ -73,7 +73,7 @@ NSMutableData*						pendingData;
 #if __has_feature(objc_arc_weak)
 	__weak id<MultipartFormDataParserDelegate>                  delegate;
 #else
-	__unsafe_unretained id<MultipartFormDataParserDelegate>     delegate;
+	__weak id<MultipartFormDataParserDelegate>     delegate;
 #endif	
 	int									currentEncoding;
 	NSStringEncoding					formEncoding;
