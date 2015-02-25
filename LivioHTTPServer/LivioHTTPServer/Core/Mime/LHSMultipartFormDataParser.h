@@ -27,7 +27,7 @@
  * This library retains it's original license and is maintained by Livio.
  */
 
-#import "MultipartMessageHeader.h"
+#import "LHSMultipartMessageHeader.h"
 
 /* 
 Part one: http://tools.ietf.org/html/rfc2045 (Format of Internet Message Bodies)
@@ -41,42 +41,38 @@ Internet message format:  http://tools.ietf.org/html/rfc2822
 Multipart/form-data http://tools.ietf.org/html/rfc2388
 */
 
-@class MultipartFormDataParser;
+@class LHSMultipartFormDataParser;
 
 //-----------------------------------------------------------------
 // protocol MultipartFormDataParser
 //-----------------------------------------------------------------
 
-@protocol MultipartFormDataParserDelegate <NSObject> 
+@protocol LHSMultipartFormDataParserDelegate <NSObject> 
 @optional
-- (void) processContent:(NSData*) data WithHeader:(MultipartMessageHeader*) header;
-- (void) processEndOfPartWithHeader:(MultipartMessageHeader*) header;
+- (void) processContent:(NSData*) data WithHeader:(LHSMultipartMessageHeader*) header;
+- (void) processEndOfPartWithHeader:(LHSMultipartMessageHeader*) header;
 - (void) processPreambleData:(NSData*) data;
 - (void) processEpilogueData:(NSData*) data;
-- (void) processStartOfPartWithHeader:(MultipartMessageHeader*) header;
+- (void) processStartOfPartWithHeader:(LHSMultipartMessageHeader*) header;
 @end
 
 //-----------------------------------------------------------------
 // interface MultipartFormDataParser
 //-----------------------------------------------------------------
 
-@interface MultipartFormDataParser : NSObject {
+@interface LHSMultipartFormDataParser : NSObject {
 NSMutableData*						pendingData;
     NSData*							boundaryData;
-    MultipartMessageHeader*			currentHeader;
+    LHSMultipartMessageHeader*			currentHeader;
 
 	BOOL							waitingForCRLF;
 	BOOL							reachedEpilogue;
 	BOOL							processedPreamble;
 	BOOL							checkForContentEnd;
 
-#if __has_feature(objc_arc_weak)
-	__weak id<MultipartFormDataParserDelegate>                  delegate;
-#else
-	__weak id<MultipartFormDataParserDelegate>     delegate;
-#endif	
-	int									currentEncoding;
-	NSStringEncoding					formEncoding;
+	__weak id<LHSMultipartFormDataParserDelegate>   delegate;
+	int                                             currentEncoding;
+	NSStringEncoding                                formEncoding;
 }
 
 - (BOOL) appendData:(NSData*) data;
@@ -86,7 +82,7 @@ NSMutableData*						pendingData;
 #if __has_feature(objc_arc_weak)
     @property(weak, readwrite) id delegate;
 #else
-    @property(unsafe_unretained, readwrite) id delegate;
+    @property(weak, readwrite) id delegate;
 #endif
 @property(readwrite) NSStringEncoding	formEncoding;
 

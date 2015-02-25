@@ -5,7 +5,7 @@
 //  Created by Валерий Гаврилов on 29.03.12.
 //  Copyright (c) 2012 LLC "Online Publishing Partners" (onlinepp.ru). All rights reserved.
 
-#import "MultipartMessageHeader.h"
+#import "LHSMultipartMessageHeader.h"
 #import "MultipartMessageHeaderField.h"
 
 //-----------------------------------------------------------------
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------
 
 
-@implementation MultipartMessageHeader
+@implementation LHSMultipartMessageHeader
 @synthesize fields,encoding;
 
 

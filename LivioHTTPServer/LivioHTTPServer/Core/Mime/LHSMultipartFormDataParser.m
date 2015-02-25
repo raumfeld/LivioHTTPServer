@@ -1,5 +1,5 @@
 
-#import "MultipartFormDataParser.h"
+#import "LHSMultipartFormDataParser.h"
 #import "DDData.h"
 
 #ifdef __x86_64__
@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------
 
 
-@interface MultipartFormDataParser (private)
+@interface LHSMultipartFormDataParser (private)
 + (NSData*) decodedDataFromData:(NSData*) data encoding:(int) encoding;
 
 - (int) findHeaderEnd:(NSData*) workingData fromOffset:(int) offset;
@@ -33,7 +33,7 @@
 //-----------------------------------------------------------------
 
 
-@implementation MultipartFormDataParser 
+@implementation LHSMultipartFormDataParser 
 @synthesize delegate,formEncoding;
 
 - (id) initWithBoundary:(NSString*) boundary formEncoding:(NSStringEncoding) _formEncoding {
@@ -210,7 +210,7 @@
 
 				// let the header parser do it's job from now on.
 				NSData * headerData = [NSData dataWithBytesNoCopy: (char*) workingData.bytes + offset length:headerEnd + 2 - offset freeWhenDone:NO];
-				currentHeader = [[MultipartMessageHeader alloc] initWithData:headerData formEncoding:formEncoding];
+				currentHeader = [[LHSMultipartMessageHeader alloc] initWithData:headerData formEncoding:formEncoding];
 
 				if( nil == currentHeader ) {
 					// we've found the data is in wrong format.
@@ -249,7 +249,7 @@
 				return YES;
 			}
 			// decode the chunk and let the delegate use it (store in a file, for example)
-			NSData* decodedData = [MultipartFormDataParser decodedDataFromData:[NSData dataWithBytesNoCopy:(char*)workingData.bytes + offset length:workingData.length - offset - sizeToLeavePending freeWhenDone:NO] encoding:currentEncoding];
+			NSData* decodedData = [LHSMultipartFormDataParser decodedDataFromData:[NSData dataWithBytesNoCopy:(char*)workingData.bytes + offset length:workingData.length - offset - sizeToLeavePending freeWhenDone:NO] encoding:currentEncoding];
 			
 			if( [delegate respondsToSelector:@selector(processContent:WithHeader:)] ) {
 				// HTTPLogVerbose(@"MultipartFormDataParser: Processed %"FMTNSINT" bytes of body",sizeToPass);

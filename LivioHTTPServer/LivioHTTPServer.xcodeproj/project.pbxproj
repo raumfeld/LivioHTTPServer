@@ -13,10 +13,10 @@
 		5D48340A1A9E6A3900252386 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4834041A9E6A3900252386 /* DDNumber.m */; };
 		5D48340B1A9E6A3900252386 /* DDRange.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834051A9E6A3900252386 /* DDRange.h */; };
 		5D48340C1A9E6A3900252386 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4834061A9E6A3900252386 /* DDRange.m */; };
-		5D4834131A9E6A4500252386 /* MultipartFormDataParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48340D1A9E6A4500252386 /* MultipartFormDataParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5D4834141A9E6A4500252386 /* MultipartFormDataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D48340E1A9E6A4500252386 /* MultipartFormDataParser.m */; };
-		5D4834151A9E6A4500252386 /* MultipartMessageHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48340F1A9E6A4500252386 /* MultipartMessageHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5D4834161A9E6A4500252386 /* MultipartMessageHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4834101A9E6A4500252386 /* MultipartMessageHeader.m */; };
+		5D4834131A9E6A4500252386 /* LHSMultipartFormDataParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48340D1A9E6A4500252386 /* LHSMultipartFormDataParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D4834141A9E6A4500252386 /* LHSMultipartFormDataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D48340E1A9E6A4500252386 /* LHSMultipartFormDataParser.m */; };
+		5D4834151A9E6A4500252386 /* LHSMultipartMessageHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48340F1A9E6A4500252386 /* LHSMultipartMessageHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D4834161A9E6A4500252386 /* LHSMultipartMessageHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4834101A9E6A4500252386 /* LHSMultipartMessageHeader.m */; };
 		5D4834171A9E6A4500252386 /* MultipartMessageHeaderField.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834111A9E6A4500252386 /* MultipartMessageHeaderField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D4834181A9E6A4500252386 /* MultipartMessageHeaderField.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4834121A9E6A4500252386 /* MultipartMessageHeaderField.m */; };
 		5D4834251A9E6A6100252386 /* HTTPAsyncFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834191A9E6A6100252386 /* HTTPAsyncFileResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -67,10 +67,10 @@
 		5D4834041A9E6A3900252386 /* DDNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDNumber.m; path = LivioHTTPServer/Core/Categories/DDNumber.m; sourceTree = SOURCE_ROOT; };
 		5D4834051A9E6A3900252386 /* DDRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDRange.h; path = LivioHTTPServer/Core/Categories/DDRange.h; sourceTree = SOURCE_ROOT; };
 		5D4834061A9E6A3900252386 /* DDRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDRange.m; path = LivioHTTPServer/Core/Categories/DDRange.m; sourceTree = SOURCE_ROOT; };
-		5D48340D1A9E6A4500252386 /* MultipartFormDataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultipartFormDataParser.h; path = LivioHTTPServer/Core/Mime/MultipartFormDataParser.h; sourceTree = SOURCE_ROOT; };
-		5D48340E1A9E6A4500252386 /* MultipartFormDataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultipartFormDataParser.m; path = LivioHTTPServer/Core/Mime/MultipartFormDataParser.m; sourceTree = SOURCE_ROOT; };
-		5D48340F1A9E6A4500252386 /* MultipartMessageHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultipartMessageHeader.h; path = LivioHTTPServer/Core/Mime/MultipartMessageHeader.h; sourceTree = SOURCE_ROOT; };
-		5D4834101A9E6A4500252386 /* MultipartMessageHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultipartMessageHeader.m; path = LivioHTTPServer/Core/Mime/MultipartMessageHeader.m; sourceTree = SOURCE_ROOT; };
+		5D48340D1A9E6A4500252386 /* LHSMultipartFormDataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LHSMultipartFormDataParser.h; path = LivioHTTPServer/Core/Mime/LHSMultipartFormDataParser.h; sourceTree = SOURCE_ROOT; };
+		5D48340E1A9E6A4500252386 /* LHSMultipartFormDataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LHSMultipartFormDataParser.m; path = LivioHTTPServer/Core/Mime/LHSMultipartFormDataParser.m; sourceTree = SOURCE_ROOT; };
+		5D48340F1A9E6A4500252386 /* LHSMultipartMessageHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LHSMultipartMessageHeader.h; path = LivioHTTPServer/Core/Mime/LHSMultipartMessageHeader.h; sourceTree = SOURCE_ROOT; };
+		5D4834101A9E6A4500252386 /* LHSMultipartMessageHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LHSMultipartMessageHeader.m; path = LivioHTTPServer/Core/Mime/LHSMultipartMessageHeader.m; sourceTree = SOURCE_ROOT; };
 		5D4834111A9E6A4500252386 /* MultipartMessageHeaderField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultipartMessageHeaderField.h; path = LivioHTTPServer/Core/Mime/MultipartMessageHeaderField.h; sourceTree = SOURCE_ROOT; };
 		5D4834121A9E6A4500252386 /* MultipartMessageHeaderField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultipartMessageHeaderField.m; path = LivioHTTPServer/Core/Mime/MultipartMessageHeaderField.m; sourceTree = SOURCE_ROOT; };
 		5D4834191A9E6A6100252386 /* HTTPAsyncFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTTPAsyncFileResponse.h; path = LivioHTTPServer/Core/Responses/HTTPAsyncFileResponse.h; sourceTree = SOURCE_ROOT; };
@@ -182,10 +182,10 @@
 		5D4833BA1A9E577000252386 /* Mime */ = {
 			isa = PBXGroup;
 			children = (
-				5D48340D1A9E6A4500252386 /* MultipartFormDataParser.h */,
-				5D48340E1A9E6A4500252386 /* MultipartFormDataParser.m */,
-				5D48340F1A9E6A4500252386 /* MultipartMessageHeader.h */,
-				5D4834101A9E6A4500252386 /* MultipartMessageHeader.m */,
+				5D48340D1A9E6A4500252386 /* LHSMultipartFormDataParser.h */,
+				5D48340E1A9E6A4500252386 /* LHSMultipartFormDataParser.m */,
+				5D48340F1A9E6A4500252386 /* LHSMultipartMessageHeader.h */,
+				5D4834101A9E6A4500252386 /* LHSMultipartMessageHeader.m */,
 				5D4834111A9E6A4500252386 /* MultipartMessageHeaderField.h */,
 				5D4834121A9E6A4500252386 /* MultipartMessageHeaderField.m */,
 			);
@@ -284,7 +284,7 @@
 				5D4834171A9E6A4500252386 /* MultipartMessageHeaderField.h in Headers */,
 				5D48342D1A9E6A6100252386 /* HTTPFileResponse.h in Headers */,
 				5D4834291A9E6A6100252386 /* HTTPDynamicFileResponse.h in Headers */,
-				5D4834131A9E6A4500252386 /* MultipartFormDataParser.h in Headers */,
+				5D4834131A9E6A4500252386 /* LHSMultipartFormDataParser.h in Headers */,
 				5D4834451A9E6A6D00252386 /* WebSocket.h in Headers */,
 				5D48343E1A9E6A6D00252386 /* HTTPConnection.h in Headers */,
 				5D4834401A9E6A6D00252386 /* HTTPMessage.h in Headers */,
@@ -293,7 +293,7 @@
 				5D4834421A9E6A6D00252386 /* HTTPResponse.h in Headers */,
 				5D48342F1A9E6A6100252386 /* HTTPRedirectResponse.h in Headers */,
 				5D4834431A9E6A6D00252386 /* HTTPServer.h in Headers */,
-				5D4834151A9E6A4500252386 /* MultipartMessageHeader.h in Headers */,
+				5D4834151A9E6A4500252386 /* LHSMultipartMessageHeader.h in Headers */,
 				5D4834071A9E6A3900252386 /* DDData.h in Headers */,
 				5D48340B1A9E6A3900252386 /* DDRange.h in Headers */,
 				5D4834091A9E6A3900252386 /* DDNumber.h in Headers */,
@@ -401,10 +401,10 @@
 				5D48343D1A9E6A6D00252386 /* HTTPAuthenticationRequest.m in Sources */,
 				5D4834181A9E6A4500252386 /* MultipartMessageHeaderField.m in Sources */,
 				5D4834301A9E6A6100252386 /* HTTPRedirectResponse.m in Sources */,
-				5D4834161A9E6A4500252386 /* MultipartMessageHeader.m in Sources */,
+				5D4834161A9E6A4500252386 /* LHSMultipartMessageHeader.m in Sources */,
 				5D48343F1A9E6A6D00252386 /* HTTPConnection.m in Sources */,
 				5D4834441A9E6A6D00252386 /* HTTPServer.m in Sources */,
-				5D4834141A9E6A4500252386 /* MultipartFormDataParser.m in Sources */,
+				5D4834141A9E6A4500252386 /* LHSMultipartFormDataParser.m in Sources */,
 				5D48342C1A9E6A6100252386 /* HTTPErrorResponse.m in Sources */,
 				5D4834281A9E6A6100252386 /* HTTPDataResponse.m in Sources */,
 				5D48342E1A9E6A6100252386 /* HTTPFileResponse.m in Sources */,
@@ -617,6 +617,7 @@
 				5D48345F1A9E7B6900252386 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
