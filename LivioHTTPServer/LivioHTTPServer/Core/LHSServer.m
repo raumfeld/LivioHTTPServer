@@ -81,7 +81,7 @@
 		// Register for notifications of closed websocket connections
 		[[NSNotificationCenter defaultCenter] addObserver:self
 		                                         selector:@selector(webSocketDidDie:)
-		                                             name:WebSocketDidDieNotification
+		                                             name:LHSWebSocketDidDieNotification
 		                                           object:nil];
 		
 		isRunning = NO;
@@ -669,7 +669,7 @@
 }
 
 /**
- * This method is automatically called when a notification of type WebSocketDidDieNotification is posted.
+ * This method is automatically called when a notification of type LHSWebSocketDidDieNotification is posted.
  * It allows us to remove the websocket from our array.
 **/
 - (void)webSocketDidDie:(NSNotification *)notification

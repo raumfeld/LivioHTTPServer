@@ -32,8 +32,7 @@
 @class LHSMessage;
 @class GCDAsyncSocket;
 
-
-#define WebSocketDidDieNotification  @"WebSocketDidDie"
+static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 
 @interface LHSWebSocket : NSObject
 {

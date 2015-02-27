@@ -14,69 +14,77 @@
 // Define chunk size used to read in data for responses
 // This is how much data will be read from disk into RAM at a time
 #if TARGET_OS_IPHONE
-  #define READ_CHUNKSIZE  (1024 * 256)
+    static NSInteger const LHSReadChunkSize = 1024 * 256;
 #else
-  #define READ_CHUNKSIZE  (1024 * 512)
+    static NSInteger const LHSReadChunkSize = 1024 * 512;
 #endif
 
 // Define chunk size used to read in POST upload data
 #if TARGET_OS_IPHONE
-  #define POST_CHUNKSIZE  (1024 * 256)
+    static NSInteger const LHSPostChunkSize = 1024 * 256;
 #else
-  #define POST_CHUNKSIZE  (1024 * 512)
+    static NSInteger const LHSPostChunkSize = 1024 * 512;
 #endif
 
 // Define the various timeouts (in seconds) for various parts of the HTTP process
-#define TIMEOUT_READ_FIRST_HEADER_LINE       30
-#define TIMEOUT_READ_SUBSEQUENT_HEADER_LINE  30
-#define TIMEOUT_READ_BODY                    -1
-#define TIMEOUT_WRITE_HEAD                   30
-#define TIMEOUT_WRITE_BODY                   -1
-#define TIMEOUT_WRITE_ERROR                  30
-#define TIMEOUT_NONCE                       300
+static NSInteger const LHSTimeoutReadFirstHeaderLine = 30;
+static NSInteger const LHSTimeoutReadSubsequentHeaderLine = 30;
+static NSInteger const LHSTimeoutReadBody = -1;
+static NSInteger const LHSTimeoutWriteHead = 30;
+static NSInteger const LHSTimeoutWriteBody = -1;
+static NSInteger const LHSTimeoutWriteError = 30;
+static NSInteger const LHSTimeoutNonce = 300;
 
 // Define the various limits
-// MAX_HEADER_LINE_LENGTH: Max length (in bytes) of any single line in a header (including \r\n)
-// MAX_HEADER_LINES      : Max number of lines in a single header (including first GET line)
-#define MAX_HEADER_LINE_LENGTH  8190
-#define MAX_HEADER_LINES         100
+// LHSMaxHeaderLineLength: Max length (in bytes) of any single line in a header (including \r\n)
+// LHSMaxHeaderLines      : Max number of lines in a single header (including first GET line)
+static NSInteger const LHSMaxHeaderLineLength = 8190;
+static NSInteger const LHSMaxHeaderLines = 100;
 // MAX_CHUNK_LINE_LENGTH : For accepting chunked transfer uploads, max length of chunk size line (including \r\n)
-#define MAX_CHUNK_LINE_LENGTH    200
+static NSInteger const LHSMaxChunkLineLength = 200;
 
 // Define the various tags we'll use to differentiate what it is we're currently doing
-#define HTTP_REQUEST_HEADER                10
-#define HTTP_REQUEST_BODY                  11
-#define HTTP_REQUEST_CHUNK_SIZE            12
-#define HTTP_REQUEST_CHUNK_DATA            13
-#define HTTP_REQUEST_CHUNK_TRAILER         14
-#define HTTP_REQUEST_CHUNK_FOOTER          15
-#define HTTP_PARTIAL_RESPONSE              20
-#define HTTP_PARTIAL_RESPONSE_HEADER       21
-#define HTTP_PARTIAL_RESPONSE_BODY         22
-#define HTTP_CHUNKED_RESPONSE_HEADER       30
-#define HTTP_CHUNKED_RESPONSE_BODY         31
-#define HTTP_CHUNKED_RESPONSE_FOOTER       32
-#define HTTP_PARTIAL_RANGE_RESPONSE_BODY   40
-#define HTTP_PARTIAL_RANGES_RESPONSE_BODY  50
-#define HTTP_RESPONSE                      90
-#define HTTP_FINAL_RESPONSE                91
+static NSInteger const LHSHTTPRequestHeader = 10;
+static NSInteger const LHSHTTPRequestBody = 11;
+static NSInteger const LHSHTTPRequestChunkSize = 12;
+static NSInteger const LHSHTTPRequestChunkData = 13;
+static NSInteger const LHSHTTPRequestChunkTrailer = 14;
+static NSInteger const LHSHTTPRequestChunkFooter = 15;
+
+static NSInteger const LHSHTTPPartialResponse = 20;
+static NSInteger const LHSHTTPPartialResponseHeader = 21;
+static NSInteger const LHSHTTPPartialResponseBody = 22;
+
+static NSInteger const LHSHTTPChunkedResponseHeader = 30;
+static NSInteger const LHSHTTPChunkedResponseBody = 31;
+static NSInteger const LHSHTTPChunkedResponseFooter = 32;
+
+static NSInteger const LHSHTTPPartialRangeResponseBody = 40;
+static NSInteger const LHSHTTPPartialRangesResponseBody = 50;
+
+static NSInteger const LHSHTTPResponse = 90;
+static NSInteger const LHSHTTPFinalResponse = 91;
 
 // A quick note about the tags:
 // 
-// The HTTP_RESPONSE and HTTP_FINAL_RESPONSE are designated tags signalling that the response is completely sent.
-// That is, in the onSocket:didWriteDataWithTag: method, if the tag is HTTP_RESPONSE or HTTP_FINAL_RESPONSE,
+// The LHSHTTPResponse and LHSHTTPFinalResponse are designated tags signalling that the response is completely sent.
+// That is, in the onSocket:didWriteDataWithTag: method, if the tag is LHSHTTPResponse or LHSHTTPFinalResponse,
 // it is assumed that the response is now completely sent.
-// Use HTTP_RESPONSE if it's the end of a response, and you want to start reading more requests afterwards.
-// Use HTTP_FINAL_RESPONSE if you wish to terminate the connection after sending the response.
+// Use LHSHTTPResponse if it's the end of a response, and you want to start reading more requests afterwards.
+// Use LHSHTTPFinalResponse if you wish to terminate the connection after sending the response.
 // 
 // If you are sending multiple data segments in a custom response, make sure that only the last segment has
-// the HTTP_RESPONSE tag. For all other segments prior to the last segment use HTTP_PARTIAL_RESPONSE, or some other
+// the LHSHTTPResponse tag. For all other segments prior to the last segment use LHSHTTPPartialResponse, or some other
 // tag of your own invention.
 
-@interface LHSConnection (PrivateAPI)
+
+@interface LHSConnection ()
+
 - (void)startReadingRequest;
 - (void)sendResponseHeadersAndBody;
+
 @end
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -130,7 +138,7 @@ static NSMutableArray *recentNonces;
 		[recentNonces addObject:newNonce];
 	}});
 	
-	double delayInSeconds = TIMEOUT_NONCE;
+	double delayInSeconds = LHSTimeoutNonce;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after(popTime, recentNonceQueue, ^{ @autoreleasepool {
 		
@@ -173,9 +181,6 @@ static NSMutableArray *recentNonces;
 		if (aConfig.queue)
 		{
 			connectionQueue = aConfig.queue;
-			#if !OS_OBJECT_USE_OBJC
-			dispatch_retain(connectionQueue);
-			#endif
 		}
 		else
 		{
@@ -210,10 +215,6 @@ static NSMutableArray *recentNonces;
 - (void)dealloc
 {
 	// HTTPLogTrace();
-	
-	#if !OS_OBJECT_USE_OBJC
-	dispatch_release(connectionQueue);
-	#endif
 	
 	[asyncSocket setDelegate:nil delegateQueue:NULL];
 	[asyncSocket disconnect];
@@ -630,9 +631,9 @@ static NSMutableArray *recentNonces;
 	// HTTPLogTrace();
 	
 	[asyncSocket readDataToData:[GCDAsyncSocket CRLFData]
-	                withTimeout:TIMEOUT_READ_FIRST_HEADER_LINE
-	                  maxLength:MAX_HEADER_LINE_LENGTH
-	                        tag:HTTP_REQUEST_HEADER];
+	                withTimeout:LHSTimeoutReadFirstHeaderLine
+	                  maxLength:LHSMaxHeaderLineLength
+	                        tag:LHSHTTPRequestHeader];
 }
 
 /**
@@ -1199,7 +1200,7 @@ static NSMutableArray *recentNonces;
 	if ([[request method] isEqualToString:@"HEAD"] || isZeroLengthResponse)
 	{
 		NSData *responseData = [self preprocessResponse:response];
-		[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_RESPONSE];
+		[asyncSocket writeData:responseData withTimeout:LHSTimeoutWriteHead tag:LHSHTTPResponse];
 		
 		sentResponseHeaders = YES;
 	}
@@ -1207,7 +1208,7 @@ static NSMutableArray *recentNonces;
 	{
 		// Write the header response
 		NSData *responseData = [self preprocessResponse:response];
-		[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_PARTIAL_RESPONSE_HEADER];
+		[asyncSocket writeData:responseData withTimeout:LHSTimeoutWriteHead tag:LHSHTTPPartialResponseHeader];
 		
 		sentResponseHeaders = YES;
 		
@@ -1215,7 +1216,7 @@ static NSMutableArray *recentNonces;
 		if (!isRangeRequest)
 		{
 			// Regular request
-			NSData *data = [httpResponse readDataOfLength:READ_CHUNKSIZE];
+			NSData *data = [httpResponse readDataOfLength:LHSReadChunkSize];
 			
 			if ([data length] > 0)
 			{
@@ -1224,25 +1225,25 @@ static NSMutableArray *recentNonces;
 				if (isChunked)
 				{
 					NSData *chunkSize = [self chunkedTransferSizeLineForLength:[data length]];
-					[asyncSocket writeData:chunkSize withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_CHUNKED_RESPONSE_HEADER];
+					[asyncSocket writeData:chunkSize withTimeout:LHSTimeoutWriteHead tag:LHSHTTPChunkedResponseHeader];
 					
-					[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:HTTP_CHUNKED_RESPONSE_BODY];
+					[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:LHSHTTPChunkedResponseBody];
 					
 					if ([httpResponse isDone])
 					{
 						NSData *footer = [self chunkedTransferFooter];
-						[asyncSocket writeData:footer withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_RESPONSE];
+						[asyncSocket writeData:footer withTimeout:LHSTimeoutWriteHead tag:LHSHTTPResponse];
 					}
 					else
 					{
 						NSData *footer = [GCDAsyncSocket CRLFData];
-						[asyncSocket writeData:footer withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_CHUNKED_RESPONSE_FOOTER];
+						[asyncSocket writeData:footer withTimeout:LHSTimeoutWriteHead tag:LHSHTTPChunkedResponseFooter];
 					}
 				}
 				else
 				{
-					long tag = [httpResponse isDone] ? HTTP_RESPONSE : HTTP_PARTIAL_RESPONSE_BODY;
-					[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:tag];
+					long tag = [httpResponse isDone] ? LHSHTTPResponse : LHSHTTPPartialResponseBody;
+					[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:tag];
 				}
 			}
 		}
@@ -1257,7 +1258,7 @@ static NSMutableArray *recentNonces;
 				
 				[httpResponse setOffset:range.location];
 				
-				NSUInteger bytesToRead = range.length < READ_CHUNKSIZE ? (NSUInteger)range.length : READ_CHUNKSIZE;
+				NSUInteger bytesToRead = range.length < LHSReadChunkSize ? (NSUInteger)range.length : LHSReadChunkSize;
 				
 				NSData *data = [httpResponse readDataOfLength:bytesToRead];
 				
@@ -1265,8 +1266,8 @@ static NSMutableArray *recentNonces;
 				{
 					[responseDataSizes addObject:[NSNumber numberWithUnsignedInteger:[data length]]];
 					
-					long tag = [data length] == range.length ? HTTP_RESPONSE : HTTP_PARTIAL_RANGE_RESPONSE_BODY;
-					[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:tag];
+					long tag = [data length] == range.length ? LHSHTTPResponse : LHSHTTPPartialRangeResponseBody;
+					[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:tag];
 				}
 			}
 			else
@@ -1276,14 +1277,14 @@ static NSMutableArray *recentNonces;
 				
 				// Write range header
 				NSData *rangeHeaderData = [ranges_headers objectAtIndex:0];
-				[asyncSocket writeData:rangeHeaderData withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_PARTIAL_RESPONSE_HEADER];
+				[asyncSocket writeData:rangeHeaderData withTimeout:LHSTimeoutWriteHead tag:LHSHTTPPartialResponseHeader];
 				
 				// Start writing range body
 				DDRange range = [[ranges objectAtIndex:0] ddrangeValue];
 				
 				[httpResponse setOffset:range.location];
 				
-				NSUInteger bytesToRead = range.length < READ_CHUNKSIZE ? (NSUInteger)range.length : READ_CHUNKSIZE;
+				NSUInteger bytesToRead = range.length < LHSReadChunkSize ? (NSUInteger)range.length : LHSReadChunkSize;
 				
 				NSData *data = [httpResponse readDataOfLength:bytesToRead];
 				
@@ -1291,7 +1292,7 @@ static NSMutableArray *recentNonces;
 				{
 					[responseDataSizes addObject:[NSNumber numberWithUnsignedInteger:[data length]]];
 					
-					[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:HTTP_PARTIAL_RANGES_RESPONSE_BODY];
+					[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:LHSHTTPPartialRangesResponseBody];
 				}
 			}
 		}
@@ -1320,7 +1321,7 @@ static NSMutableArray *recentNonces;
 
 /**
  * Sends more data, if needed, without growing the write queue over its approximate size limit.
- * The last chunk of the response body will be sent with a tag of HTTP_RESPONSE.
+ * The last chunk of the response body will be sent with a tag of LHSHTTPResponse.
  * 
  * This method should only be called for standard (non-range) responses.
 **/
@@ -1333,7 +1334,7 @@ static NSMutableArray *recentNonces;
 	// In the case of the asynchronous HTTPResponse, we don't want to blindly grab the new data,
 	// and shove it onto asyncSocket's write queue.
 	// Doing so could negatively affect the memory footprint of the application.
-	// Instead, we always ensure that we place no more than READ_CHUNKSIZE bytes onto the write queue.
+	// Instead, we always ensure that we place no more than LHSReadChunkSize bytes onto the write queue.
 	// 
 	// Note that this does not affect the rate at which the HTTPResponse object may generate data.
 	// The HTTPResponse is free to do as it pleases, and this is up to the application's developer.
@@ -1344,9 +1345,9 @@ static NSMutableArray *recentNonces;
 	
 	NSUInteger writeQueueSize = [self writeQueueSize];
 	
-	if(writeQueueSize >= READ_CHUNKSIZE) return;
+	if(writeQueueSize >= LHSReadChunkSize) return;
 	
-	NSUInteger available = READ_CHUNKSIZE - writeQueueSize;
+	NSUInteger available = LHSReadChunkSize - writeQueueSize;
 	NSData *data = [httpResponse readDataOfLength:available];
 	
 	if ([data length] > 0)
@@ -1363,32 +1364,32 @@ static NSMutableArray *recentNonces;
 		if (isChunked)
 		{
 			NSData *chunkSize = [self chunkedTransferSizeLineForLength:[data length]];
-			[asyncSocket writeData:chunkSize withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_CHUNKED_RESPONSE_HEADER];
+			[asyncSocket writeData:chunkSize withTimeout:LHSTimeoutWriteHead tag:LHSHTTPChunkedResponseHeader];
 			
-			[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:HTTP_CHUNKED_RESPONSE_BODY];
+			[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:LHSHTTPChunkedResponseBody];
 			
 			if([httpResponse isDone])
 			{
 				NSData *footer = [self chunkedTransferFooter];
-				[asyncSocket writeData:footer withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_RESPONSE];
+				[asyncSocket writeData:footer withTimeout:LHSTimeoutWriteHead tag:LHSHTTPResponse];
 			}
 			else
 			{
 				NSData *footer = [GCDAsyncSocket CRLFData];
-				[asyncSocket writeData:footer withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_CHUNKED_RESPONSE_FOOTER];
+				[asyncSocket writeData:footer withTimeout:LHSTimeoutWriteHead tag:LHSHTTPChunkedResponseFooter];
 			}
 		}
 		else
 		{
-			long tag = [httpResponse isDone] ? HTTP_RESPONSE : HTTP_PARTIAL_RESPONSE_BODY;
-			[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:tag];
+			long tag = [httpResponse isDone] ? LHSHTTPResponse : LHSHTTPPartialResponseBody;
+			[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:tag];
 		}
 	}
 }
 
 /**
  * Sends more data, if needed, without growing the write queue over its approximate size limit.
- * The last chunk of the response body will be sent with a tag of HTTP_RESPONSE.
+ * The last chunk of the response body will be sent with a tag of LHSHTTPResponse.
  * 
  * This method should only be called for single-range responses.
 **/
@@ -1401,7 +1402,7 @@ static NSMutableArray *recentNonces;
 	// In the case of the asynchronous response, we don't want to blindly grab the new data,
 	// and shove it onto asyncSocket's write queue.
 	// Doing so could negatively affect the memory footprint of the application.
-	// Instead, we always ensure that we place no more than READ_CHUNKSIZE bytes onto the write queue.
+	// Instead, we always ensure that we place no more than LHSReadChunkSize bytes onto the write queue.
 	// 
 	// Note that this does not affect the rate at which the HTTPResponse object may generate data.
 	// The HTTPResponse is free to do as it pleases, and this is up to the application's developer.
@@ -1412,7 +1413,7 @@ static NSMutableArray *recentNonces;
 	
 	NSUInteger writeQueueSize = [self writeQueueSize];
 	
-	if(writeQueueSize >= READ_CHUNKSIZE) return;
+	if(writeQueueSize >= LHSReadChunkSize) return;
 	
 	DDRange range = [[ranges objectAtIndex:0] ddrangeValue];
 	
@@ -1422,7 +1423,7 @@ static NSMutableArray *recentNonces;
 	
 	if (bytesLeft > 0)
 	{
-		NSUInteger available = READ_CHUNKSIZE - writeQueueSize;
+		NSUInteger available = LHSReadChunkSize - writeQueueSize;
 		NSUInteger bytesToRead = bytesLeft < available ? (NSUInteger)bytesLeft : available;
 		
 		NSData *data = [httpResponse readDataOfLength:bytesToRead];
@@ -1431,15 +1432,15 @@ static NSMutableArray *recentNonces;
 		{
 			[responseDataSizes addObject:[NSNumber numberWithUnsignedInteger:[data length]]];
 			
-			long tag = [data length] == bytesLeft ? HTTP_RESPONSE : HTTP_PARTIAL_RANGE_RESPONSE_BODY;
-			[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:tag];
+			long tag = [data length] == bytesLeft ? LHSHTTPResponse : LHSHTTPPartialRangeResponseBody;
+			[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:tag];
 		}
 	}
 }
 
 /**
  * Sends more data, if needed, without growing the write queue over its approximate size limit.
- * The last chunk of the response body will be sent with a tag of HTTP_RESPONSE.
+ * The last chunk of the response body will be sent with a tag of LHSHTTPResponse.
  * 
  * This method should only be called for multi-range responses.
 **/
@@ -1452,7 +1453,7 @@ static NSMutableArray *recentNonces;
 	// In the case of the asynchronous HTTPResponse, we don't want to blindly grab the new data,
 	// and shove it onto asyncSocket's write queue.
 	// Doing so could negatively affect the memory footprint of the application.
-	// Instead, we always ensure that we place no more than READ_CHUNKSIZE bytes onto the write queue.
+	// Instead, we always ensure that we place no more than LHSReadChunkSize bytes onto the write queue.
 	// 
 	// Note that this does not affect the rate at which the HTTPResponse object may generate data.
 	// The HTTPResponse is free to do as it pleases, and this is up to the application's developer.
@@ -1463,7 +1464,7 @@ static NSMutableArray *recentNonces;
 	
 	NSUInteger writeQueueSize = [self writeQueueSize];
 	
-	if(writeQueueSize >= READ_CHUNKSIZE) return;
+	if(writeQueueSize >= LHSReadChunkSize) return;
 	
 	DDRange range = [[ranges objectAtIndex:rangeIndex] ddrangeValue];
 	
@@ -1473,7 +1474,7 @@ static NSMutableArray *recentNonces;
 	
 	if (bytesLeft > 0)
 	{
-		NSUInteger available = READ_CHUNKSIZE - writeQueueSize;
+		NSUInteger available = LHSReadChunkSize - writeQueueSize;
 		NSUInteger bytesToRead = bytesLeft < available ? (NSUInteger)bytesLeft : available;
 		
 		NSData *data = [httpResponse readDataOfLength:bytesToRead];
@@ -1482,7 +1483,7 @@ static NSMutableArray *recentNonces;
 		{
 			[responseDataSizes addObject:[NSNumber numberWithUnsignedInteger:[data length]]];
 			
-			[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:HTTP_PARTIAL_RANGES_RESPONSE_BODY];
+			[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:LHSHTTPPartialRangesResponseBody];
 		}
 	}
 	else
@@ -1491,14 +1492,14 @@ static NSMutableArray *recentNonces;
 		{
 			// Write range header
 			NSData *rangeHeader = [ranges_headers objectAtIndex:rangeIndex];
-			[asyncSocket writeData:rangeHeader withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_PARTIAL_RESPONSE_HEADER];
+			[asyncSocket writeData:rangeHeader withTimeout:LHSTimeoutWriteHead tag:LHSHTTPPartialResponseHeader];
 			
 			// Start writing range body
 			range = [[ranges objectAtIndex:rangeIndex] ddrangeValue];
 			
 			[httpResponse setOffset:range.location];
 			
-			NSUInteger available = READ_CHUNKSIZE - writeQueueSize;
+			NSUInteger available = LHSReadChunkSize - writeQueueSize;
 			NSUInteger bytesToRead = range.length < available ? (NSUInteger)range.length : available;
 			
 			NSData *data = [httpResponse readDataOfLength:bytesToRead];
@@ -1507,7 +1508,7 @@ static NSMutableArray *recentNonces;
 			{
 				[responseDataSizes addObject:[NSNumber numberWithUnsignedInteger:[data length]]];
 				
-				[asyncSocket writeData:data withTimeout:TIMEOUT_WRITE_BODY tag:HTTP_PARTIAL_RANGES_RESPONSE_BODY];
+				[asyncSocket writeData:data withTimeout:LHSTimeoutWriteBody tag:LHSHTTPPartialRangesResponseBody];
 			}
 		}
 		else
@@ -1516,7 +1517,7 @@ static NSMutableArray *recentNonces;
 			NSString *endingBoundryStr = [NSString stringWithFormat:@"\r\n--%@--\r\n", ranges_boundry];
 			NSData *endingBoundryData = [endingBoundryStr dataUsingEncoding:NSUTF8StringEncoding];
 			
-			[asyncSocket writeData:endingBoundryData withTimeout:TIMEOUT_WRITE_HEAD tag:HTTP_RESPONSE];
+			[asyncSocket writeData:endingBoundryData withTimeout:LHSTimeoutWriteHead tag:LHSHTTPResponse];
 		}
 	}
 }
@@ -1719,7 +1720,7 @@ static NSMutableArray *recentNonces;
 	// 
 	// Remember: In order to support LARGE POST uploads, the data is read in chunks.
 	// This prevents a 50 MB upload from being stored in RAM.
-	// The size of the chunks are limited by the POST_CHUNKSIZE definition.
+	// The size of the chunks are limited by the LHSPostChunkSize definition.
 	// Therefore, this method may be called multiple times for the same POST request.
 }
 
@@ -1752,7 +1753,7 @@ static NSMutableArray *recentNonces;
 	[response setHeaderField:@"Content-Length" value:@"0"];
     
 	NSData *responseData = [self preprocessErrorResponse:response];
-	[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_ERROR tag:HTTP_RESPONSE];
+	[asyncSocket writeData:responseData withTimeout:LHSTimeoutWriteError tag:LHSHTTPResponse];
 	
 }
 
@@ -1781,7 +1782,7 @@ static NSMutableArray *recentNonces;
 	}
 	
 	NSData *responseData = [self preprocessErrorResponse:response];
-	[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_ERROR tag:HTTP_RESPONSE];
+	[asyncSocket writeData:responseData withTimeout:LHSTimeoutWriteError tag:LHSHTTPResponse];
 	
 }
 
@@ -1804,10 +1805,10 @@ static NSMutableArray *recentNonces;
 	[response setHeaderField:@"Connection" value:@"close"];
 	
 	NSData *responseData = [self preprocessErrorResponse:response];
-	[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_ERROR tag:HTTP_FINAL_RESPONSE];
+	[asyncSocket writeData:responseData withTimeout:LHSTimeoutWriteError tag:LHSHTTPFinalResponse];
 	
 	
-	// Note: We used the HTTP_FINAL_RESPONSE tag to disconnect after the response is sent.
+	// Note: We used the LHSHTTPFinalResponse tag to disconnect after the response is sent.
 	// We do this because we couldn't parse the request,
 	// so we won't be able to recover and move on to another request afterwards.
 	// In other words, we wouldn't know where the first request ends and the second request begins.
@@ -1832,10 +1833,10 @@ static NSMutableArray *recentNonces;
 	[response setHeaderField:@"Connection" value:@"close"];
 	
 	NSData *responseData = [self preprocessErrorResponse:response];
-	[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_ERROR tag:HTTP_FINAL_RESPONSE];
+	[asyncSocket writeData:responseData withTimeout:LHSTimeoutWriteError tag:LHSHTTPFinalResponse];
     
 	
-	// Note: We used the HTTP_FINAL_RESPONSE tag to disconnect after the response is sent.
+	// Note: We used the LHSHTTPFinalResponse tag to disconnect after the response is sent.
 	// We do this because the method may include an http body.
 	// Since we can't be sure, we should close the connection.
 }
@@ -1856,7 +1857,7 @@ static NSMutableArray *recentNonces;
 	[response setHeaderField:@"Content-Length" value:@"0"];
 	
 	NSData *responseData = [self preprocessErrorResponse:response];
-	[asyncSocket writeData:responseData withTimeout:TIMEOUT_WRITE_ERROR tag:HTTP_RESPONSE];
+	[asyncSocket writeData:responseData withTimeout:LHSTimeoutWriteError tag:LHSHTTPResponse];
 	
 }
 
@@ -2002,7 +2003,7 @@ static NSMutableArray *recentNonces;
 **/
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData*)data withTag:(long)tag
 {
-	if (tag == HTTP_REQUEST_HEADER)
+	if (tag == LHSHTTPRequestHeader)
 	{
 		// Append the header line to the http message
 		BOOL result = [request appendData:data];
@@ -2016,7 +2017,7 @@ static NSMutableArray *recentNonces;
 		{
 			// We don't have a complete header yet
 			// That is, we haven't yet received a CRLF on a line by itself, indicating the end of the header
-			if (++numHeaderLines > MAX_HEADER_LINES)
+			if (++numHeaderLines > LHSMaxHeaderLines)
 			{
 				// Reached the maximum amount of header lines in a single HTTP request
 				// This could be an attempted DOS attack
@@ -2028,9 +2029,9 @@ static NSMutableArray *recentNonces;
 			else
 			{
 				[asyncSocket readDataToData:[GCDAsyncSocket CRLFData]
-				                withTimeout:TIMEOUT_READ_SUBSEQUENT_HEADER_LINE
-				                  maxLength:MAX_HEADER_LINE_LENGTH
-				                        tag:HTTP_REQUEST_HEADER];
+				                withTimeout:LHSTimeoutReadSubsequentHeaderLine
+				                  maxLength:LHSMaxHeaderLineLength
+				                        tag:LHSHTTPRequestHeader];
 			}
 		}
 		else
@@ -2135,21 +2136,21 @@ static NSMutableArray *recentNonces;
 						// Chunked transfer
 						
 						[asyncSocket readDataToData:[GCDAsyncSocket CRLFData]
-						                withTimeout:TIMEOUT_READ_BODY
-						                  maxLength:MAX_CHUNK_LINE_LENGTH
-						                        tag:HTTP_REQUEST_CHUNK_SIZE];
+						                withTimeout:LHSTimeoutReadBody
+						                  maxLength:LHSMaxChunkLineLength
+						                        tag:LHSHTTPRequestChunkSize];
 					}
 					else
 					{
 						NSUInteger bytesToRead;
-						if (requestContentLength < POST_CHUNKSIZE)
+						if (requestContentLength < LHSPostChunkSize)
 							bytesToRead = (NSUInteger)requestContentLength;
 						else
-							bytesToRead = POST_CHUNKSIZE;
+							bytesToRead = LHSPostChunkSize;
 						
 						[asyncSocket readDataToLength:bytesToRead
-						                  withTimeout:TIMEOUT_READ_BODY
-						                          tag:HTTP_REQUEST_BODY];
+						                  withTimeout:LHSTimeoutReadBody
+						                          tag:LHSHTTPRequestBody];
 					}
 				}
 				else
@@ -2182,13 +2183,13 @@ static NSMutableArray *recentNonces;
 		//    and ending with CRLF.
 		// 2. The data itself, followed by CRLF.
 		// 
-		// Part 1 is represented by HTTP_REQUEST_CHUNK_SIZE
-		// Part 2 is represented by HTTP_REQUEST_CHUNK_DATA and HTTP_REQUEST_CHUNK_TRAILER
+		// Part 1 is represented by LHSHTTPRequestChunkSize
+		// Part 2 is represented by LHSHTTPRequestChunkData and LHSHTTPRequestChunkTrailer
 		// where the trailer is the CRLF that follows the data.
 		// 
-		// The optional footers and blank line are represented by HTTP_REQUEST_CHUNK_FOOTER.
+		// The optional footers and blank line are represented by LHSHTTPRequestChunkFooter.
 		
-		if (tag == HTTP_REQUEST_CHUNK_SIZE)
+		if (tag == LHSHTTPRequestChunkSize)
 		{
 			// We have just read in a line with the size of the chunk data, in hex, 
 			// possibly followed by a semicolon and extra parameters that can be ignored,
@@ -2211,11 +2212,11 @@ static NSMutableArray *recentNonces;
 			if (requestChunkSize > 0)
 			{
 				NSUInteger bytesToRead;
-				bytesToRead = (requestChunkSize < POST_CHUNKSIZE) ? (NSUInteger)requestChunkSize : POST_CHUNKSIZE;
+				bytesToRead = (requestChunkSize < LHSPostChunkSize) ? (NSUInteger)requestChunkSize : LHSPostChunkSize;
 				
 				[asyncSocket readDataToLength:bytesToRead
-				                  withTimeout:TIMEOUT_READ_BODY
-				                          tag:HTTP_REQUEST_CHUNK_DATA];
+				                  withTimeout:LHSTimeoutReadBody
+				                          tag:LHSHTTPRequestChunkData];
 			}
 			else
 			{
@@ -2223,14 +2224,14 @@ static NSMutableArray *recentNonces;
 				// which is to be followed by optional footers (just like headers) and finally a blank line.
 				
 				[asyncSocket readDataToData:[GCDAsyncSocket CRLFData]
-				                withTimeout:TIMEOUT_READ_BODY
-				                  maxLength:MAX_HEADER_LINE_LENGTH
-				                        tag:HTTP_REQUEST_CHUNK_FOOTER];
+				                withTimeout:LHSTimeoutReadBody
+				                  maxLength:LHSMaxHeaderLineLength
+				                        tag:LHSHTTPRequestChunkFooter];
 			}
 			
 			return;
 		}
-		else if (tag == HTTP_REQUEST_CHUNK_DATA)
+		else if (tag == LHSHTTPRequestChunkData)
 		{
 			// We just read part of the actual data.
 			
@@ -2242,11 +2243,11 @@ static NSMutableArray *recentNonces;
 			UInt64 bytesLeft = requestChunkSize - requestChunkSizeReceived;
 			if (bytesLeft > 0)
 			{
-				NSUInteger bytesToRead = (bytesLeft < POST_CHUNKSIZE) ? (NSUInteger)bytesLeft : POST_CHUNKSIZE;
+				NSUInteger bytesToRead = (bytesLeft < LHSPostChunkSize) ? (NSUInteger)bytesLeft : LHSPostChunkSize;
 				
 				[asyncSocket readDataToLength:bytesToRead
-				                  withTimeout:TIMEOUT_READ_BODY
-				                          tag:HTTP_REQUEST_CHUNK_DATA];
+				                  withTimeout:LHSTimeoutReadBody
+				                          tag:LHSHTTPRequestChunkData];
 			}
 			else
 			{
@@ -2254,13 +2255,13 @@ static NSMutableArray *recentNonces;
 				// The data is followed by a CRLF, which we need to read (and basically ignore)
 				
 				[asyncSocket readDataToLength:2
-				                  withTimeout:TIMEOUT_READ_BODY
-				                          tag:HTTP_REQUEST_CHUNK_TRAILER];
+				                  withTimeout:LHSTimeoutReadBody
+				                          tag:LHSHTTPRequestChunkTrailer];
 			}
 			
 			return;
 		}
-		else if (tag == HTTP_REQUEST_CHUNK_TRAILER)
+		else if (tag == LHSHTTPRequestChunkTrailer)
 		{
 			// This should be the CRLF following the data.
 			// Just ensure it's a CRLF.
@@ -2276,14 +2277,14 @@ static NSMutableArray *recentNonces;
 			// Now continue with the next chunk
 			
 			[asyncSocket readDataToData:[GCDAsyncSocket CRLFData]
-			                withTimeout:TIMEOUT_READ_BODY
-			                  maxLength:MAX_CHUNK_LINE_LENGTH
-			                        tag:HTTP_REQUEST_CHUNK_SIZE];
+			                withTimeout:LHSTimeoutReadBody
+			                  maxLength:LHSMaxChunkLineLength
+			                        tag:LHSHTTPRequestChunkSize];
 			
 		}
-		else if (tag == HTTP_REQUEST_CHUNK_FOOTER)
+		else if (tag == LHSHTTPRequestChunkFooter)
 		{
-			if (++numHeaderLines > MAX_HEADER_LINES)
+			if (++numHeaderLines > LHSMaxHeaderLines)
 			{
 				// Reached the maximum amount of header lines in a single HTTP request
 				// This could be an attempted DOS attack
@@ -2300,16 +2301,16 @@ static NSMutableArray *recentNonces;
 				// For now we ignore, and continue reading the footers, waiting for the final blank line.
 				
 				[asyncSocket readDataToData:[GCDAsyncSocket CRLFData]
-				                withTimeout:TIMEOUT_READ_BODY
-				                  maxLength:MAX_HEADER_LINE_LENGTH
-				                        tag:HTTP_REQUEST_CHUNK_FOOTER];
+				                withTimeout:LHSTimeoutReadBody
+				                  maxLength:LHSMaxHeaderLineLength
+				                        tag:LHSHTTPRequestChunkFooter];
 			}
 			else
 			{
 				doneReadingRequest = YES;
 			}
 		}
-		else  // HTTP_REQUEST_BODY
+		else  // LHSHTTPRequestBody
 		{
 			// Handle a chunk of data from the POST body
 			
@@ -2322,11 +2323,11 @@ static NSMutableArray *recentNonces;
 				
 				UInt64 bytesLeft = requestContentLength - requestContentLengthReceived;
 				
-				NSUInteger bytesToRead = bytesLeft < POST_CHUNKSIZE ? (NSUInteger)bytesLeft : POST_CHUNKSIZE;
+				NSUInteger bytesToRead = bytesLeft < LHSPostChunkSize ? (NSUInteger)bytesLeft : LHSPostChunkSize;
 				
 				[asyncSocket readDataToLength:bytesToRead
-				                  withTimeout:TIMEOUT_READ_BODY
-				                          tag:HTTP_REQUEST_BODY];
+				                  withTimeout:LHSTimeoutReadBody
+				                          tag:LHSHTTPRequestBody];
 			}
 			else
 			{
@@ -2351,7 +2352,7 @@ static NSMutableArray *recentNonces;
 {
 	BOOL doneSendingResponse = NO;
 	
-	if (tag == HTTP_PARTIAL_RESPONSE_BODY)
+	if (tag == LHSHTTPPartialResponseBody)
 	{
 		// Update the amount of data we have in asyncSocket's write queue
         if ([responseDataSizes count] > 0) {
@@ -2361,7 +2362,7 @@ static NSMutableArray *recentNonces;
 		// We only wrote a part of the response - there may be more
 		[self continueSendingStandardResponseBody];
 	}
-	else if (tag == HTTP_CHUNKED_RESPONSE_BODY)
+	else if (tag == LHSHTTPChunkedResponseBody)
 	{
 		// Update the amount of data we have in asyncSocket's write queue.
 		// This will allow asynchronous responses to continue sending more data.
@@ -2371,12 +2372,12 @@ static NSMutableArray *recentNonces;
 		// Don't continue sending the response yet.
 		// The chunked footer that was sent after the body will tell us if we have more data to send.
 	}
-	else if (tag == HTTP_CHUNKED_RESPONSE_FOOTER)
+	else if (tag == LHSHTTPChunkedResponseFooter)
 	{
 		// Normal chunked footer indicating we have more data to send (non final footer).
 		[self continueSendingStandardResponseBody];
 	}
-	else if (tag == HTTP_PARTIAL_RANGE_RESPONSE_BODY)
+	else if (tag == LHSHTTPPartialRangeResponseBody)
 	{
 		// Update the amount of data we have in asyncSocket's write queue
         if ([responseDataSizes count] > 0) {
@@ -2385,7 +2386,7 @@ static NSMutableArray *recentNonces;
 		// We only wrote a part of the range - there may be more
 		[self continueSendingSingleRangeResponseBody];
 	}
-	else if (tag == HTTP_PARTIAL_RANGES_RESPONSE_BODY)
+	else if (tag == LHSHTTPPartialRangesResponseBody)
 	{
 		// Update the amount of data we have in asyncSocket's write queue
         if ([responseDataSizes count] > 0) {
@@ -2394,7 +2395,7 @@ static NSMutableArray *recentNonces;
 		// We only wrote part of the range - there may be more, or there may be more ranges
 		[self continueSendingMultiRangeResponseBody];
 	}
-	else if (tag == HTTP_RESPONSE || tag == HTTP_FINAL_RESPONSE)
+	else if (tag == LHSHTTPResponse || tag == LHSHTTPFinalResponse)
 	{
 		// Update the amount of data we have in asyncSocket's write queue
 		if ([responseDataSizes count] > 0)
@@ -2414,7 +2415,7 @@ static NSMutableArray *recentNonces;
 		}
 		
 		
-		if (tag == HTTP_FINAL_RESPONSE)
+		if (tag == LHSHTTPFinalResponse)
 		{
 			// Cleanup after the last request
 			[self finishResponse];
