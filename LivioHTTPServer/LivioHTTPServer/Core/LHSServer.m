@@ -30,8 +30,8 @@
 		// HTTPLogTrace();
 		
 		// Setup underlying dispatch queues
-		serverQueue = dispatch_queue_create("HTTPServer", NULL);
-		connectionQueue = dispatch_queue_create("HTTPConnection", NULL);
+		serverQueue = dispatch_queue_create("com.livio.httpserver", DISPATCH_QUEUE_SERIAL);
+		connectionQueue = dispatch_queue_create("com.livio.httpconnection", DISPATCH_QUEUE_SERIAL);
 		
 		IsOnServerQueueKey = &IsOnServerQueueKey;
 		IsOnConnectionQueueKey = &IsOnConnectionQueueKey;
@@ -45,7 +45,7 @@
 		asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue];
 		
 		// Use default connection class of HTTPConnection
-		connectionClass = [LHSConnection self];
+		connectionClass = [LHSConnection class];
 		
 		// By default bind on all available interfaces, en1, wifi etc
 		interface = nil;

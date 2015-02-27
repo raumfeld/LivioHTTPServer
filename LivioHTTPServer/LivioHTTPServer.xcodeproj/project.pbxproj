@@ -7,6 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D3CD6C31AA0F4B300987CC1 /* LivioHTTPServer-Mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3CD6C21AA0F4B300987CC1 /* LivioHTTPServer-Mac.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6C91AA0F4B300987CC1 /* LivioHTTPServer_Mac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D3CD6BE1AA0F4B300987CC1 /* LivioHTTPServer_Mac.framework */; };
+		5D3CD6D01AA0F4B300987CC1 /* LivioHTTPServer_MacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3CD6CF1AA0F4B300987CC1 /* LivioHTTPServer_MacTests.m */; };
+		5D3CD6D71AA0F55200987CC1 /* DDData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834011A9E6A3900252386 /* DDData.h */; };
+		5D3CD6D81AA0F55600987CC1 /* DDNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834031A9E6A3900252386 /* DDNumber.h */; };
+		5D3CD6D91AA0F55900987CC1 /* DDRange.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834051A9E6A3900252386 /* DDRange.h */; };
+		5D3CD6DA1AA0F55E00987CC1 /* LHSMultipartFormDataParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48340D1A9E6A4500252386 /* LHSMultipartFormDataParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6DB1AA0F56600987CC1 /* LHSMultipartMessageHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48340F1A9E6A4500252386 /* LHSMultipartMessageHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6DC1AA0F56600987CC1 /* LHSMultipartMessageHeaderField.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834111A9E6A4500252386 /* LHSMultipartMessageHeaderField.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6DD1AA0F57700987CC1 /* LHSResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834371A9E6A6D00252386 /* LHSResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6DE1AA0F57700987CC1 /* LHSAsyncFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834191A9E6A6100252386 /* LHSAsyncFileResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6DF1AA0F57700987CC1 /* LHSDataResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48341B1A9E6A6100252386 /* LHSDataResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E01AA0F57700987CC1 /* LHSDynamicFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48341D1A9E6A6100252386 /* LHSDynamicFileResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E11AA0F57700987CC1 /* LHSErrorResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48341F1A9E6A6100252386 /* LHSErrorResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E21AA0F57700987CC1 /* LHSFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834211A9E6A6100252386 /* LHSFileResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E31AA0F57700987CC1 /* LHSRedirectResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834231A9E6A6100252386 /* LHSRedirectResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E41AA0F57D00987CC1 /* LHSAuthenticationRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834311A9E6A6D00252386 /* LHSAuthenticationRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E51AA0F58C00987CC1 /* LHSConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834331A9E6A6D00252386 /* LHSConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E61AA0F58C00987CC1 /* LHSMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834351A9E6A6D00252386 /* LHSMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E71AA0F58C00987CC1 /* LHSServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834381A9E6A6D00252386 /* LHSServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D3CD6E81AA0F58C00987CC1 /* LHSWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48343A1A9E6A6D00252386 /* LHSWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D4834071A9E6A3900252386 /* DDData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834011A9E6A3900252386 /* DDData.h */; };
 		5D4834081A9E6A3900252386 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4834021A9E6A3900252386 /* DDData.m */; };
 		5D4834091A9E6A3900252386 /* DDNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834031A9E6A3900252386 /* DDNumber.h */; };
@@ -49,6 +70,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5D3CD6CA1AA0F4B300987CC1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D48338E1A9E574400252386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D3CD6BD1AA0F4B300987CC1;
+			remoteInfo = "LivioHTTPServer-Mac";
+		};
 		5D48345B1A9E7B6900252386 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5D48338E1A9E574400252386 /* Project object */;
@@ -59,6 +87,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5D3CD6BE1AA0F4B300987CC1 /* LivioHTTPServer_Mac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LivioHTTPServer_Mac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D3CD6C11AA0F4B300987CC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5D3CD6C21AA0F4B300987CC1 /* LivioHTTPServer-Mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LivioHTTPServer-Mac.h"; sourceTree = "<group>"; };
+		5D3CD6C81AA0F4B300987CC1 /* LivioHTTPServer-MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "LivioHTTPServer-MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D3CD6CE1AA0F4B300987CC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5D3CD6CF1AA0F4B300987CC1 /* LivioHTTPServer_MacTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LivioHTTPServer_MacTests.m; sourceTree = "<group>"; };
 		5D4833971A9E574400252386 /* LivioHTTPServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LivioHTTPServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D48339B1A9E574400252386 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D4834011A9E6A3900252386 /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDData.h; path = LivioHTTPServer/Core/Categories/DDData.h; sourceTree = SOURCE_ROOT; };
@@ -104,6 +138,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5D3CD6BA1AA0F4B300987CC1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D3CD6C51AA0F4B300987CC1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3CD6C91AA0F4B300987CC1 /* LivioHTTPServer_Mac.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5D4833931A9E574400252386 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -123,11 +172,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5D3CD6BF1AA0F4B300987CC1 /* LivioHTTPServer-Mac */ = {
+			isa = PBXGroup;
+			children = (
+				5D3CD6C21AA0F4B300987CC1 /* LivioHTTPServer-Mac.h */,
+				5D3CD6C01AA0F4B300987CC1 /* Supporting Files */,
+			);
+			path = "LivioHTTPServer-Mac";
+			sourceTree = "<group>";
+		};
+		5D3CD6C01AA0F4B300987CC1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D3CD6C11AA0F4B300987CC1 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5D3CD6CC1AA0F4B300987CC1 /* LivioHTTPServer-MacTests */ = {
+			isa = PBXGroup;
+			children = (
+				5D3CD6CF1AA0F4B300987CC1 /* LivioHTTPServer_MacTests.m */,
+				5D3CD6CD1AA0F4B300987CC1 /* Supporting Files */,
+			);
+			path = "LivioHTTPServer-MacTests";
+			sourceTree = "<group>";
+		};
+		5D3CD6CD1AA0F4B300987CC1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D3CD6CE1AA0F4B300987CC1 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		5D48338D1A9E574400252386 = {
 			isa = PBXGroup;
 			children = (
 				5D4833991A9E574400252386 /* LivioHTTPServer */,
 				5D4834551A9E7B6900252386 /* LivioHTTPServerTests */,
+				5D3CD6BF1AA0F4B300987CC1 /* LivioHTTPServer-Mac */,
+				5D3CD6CC1AA0F4B300987CC1 /* LivioHTTPServer-MacTests */,
 				5D4833981A9E574400252386 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -137,6 +222,8 @@
 			children = (
 				5D4833971A9E574400252386 /* LivioHTTPServer.framework */,
 				5D4834541A9E7B6900252386 /* LivioHTTPServerTests.xctest */,
+				5D3CD6BE1AA0F4B300987CC1 /* LivioHTTPServer_Mac.framework */,
+				5D3CD6C81AA0F4B300987CC1 /* LivioHTTPServer-MacTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -274,6 +361,32 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		5D3CD6BB1AA0F4B300987CC1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3CD6E11AA0F57700987CC1 /* LHSErrorResponse.h in Headers */,
+				5D3CD6E31AA0F57700987CC1 /* LHSRedirectResponse.h in Headers */,
+				5D3CD6E41AA0F57D00987CC1 /* LHSAuthenticationRequest.h in Headers */,
+				5D3CD6E61AA0F58C00987CC1 /* LHSMessage.h in Headers */,
+				5D3CD6E01AA0F57700987CC1 /* LHSDynamicFileResponse.h in Headers */,
+				5D3CD6DB1AA0F56600987CC1 /* LHSMultipartMessageHeader.h in Headers */,
+				5D3CD6DD1AA0F57700987CC1 /* LHSResponse.h in Headers */,
+				5D3CD6E81AA0F58C00987CC1 /* LHSWebSocket.h in Headers */,
+				5D3CD6DC1AA0F56600987CC1 /* LHSMultipartMessageHeaderField.h in Headers */,
+				5D3CD6D91AA0F55900987CC1 /* DDRange.h in Headers */,
+				5D3CD6DE1AA0F57700987CC1 /* LHSAsyncFileResponse.h in Headers */,
+				5D3CD6D71AA0F55200987CC1 /* DDData.h in Headers */,
+				5D3CD6DA1AA0F55E00987CC1 /* LHSMultipartFormDataParser.h in Headers */,
+				5D3CD6E21AA0F57700987CC1 /* LHSFileResponse.h in Headers */,
+				5D3CD6E51AA0F58C00987CC1 /* LHSConnection.h in Headers */,
+				5D3CD6DF1AA0F57700987CC1 /* LHSDataResponse.h in Headers */,
+				5D3CD6D81AA0F55600987CC1 /* DDNumber.h in Headers */,
+				5D3CD6C31AA0F4B300987CC1 /* LivioHTTPServer-Mac.h in Headers */,
+				5D3CD6E71AA0F58C00987CC1 /* LHSServer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5D4833941A9E574400252386 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -303,6 +416,42 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		5D3CD6BD1AA0F4B300987CC1 /* LivioHTTPServer-Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D3CD6D11AA0F4B300987CC1 /* Build configuration list for PBXNativeTarget "LivioHTTPServer-Mac" */;
+			buildPhases = (
+				5D3CD6B91AA0F4B300987CC1 /* Sources */,
+				5D3CD6BA1AA0F4B300987CC1 /* Frameworks */,
+				5D3CD6BB1AA0F4B300987CC1 /* Headers */,
+				5D3CD6BC1AA0F4B300987CC1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "LivioHTTPServer-Mac";
+			productName = "LivioHTTPServer-Mac";
+			productReference = 5D3CD6BE1AA0F4B300987CC1 /* LivioHTTPServer_Mac.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		5D3CD6C71AA0F4B300987CC1 /* LivioHTTPServer-MacTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D3CD6D41AA0F4B300987CC1 /* Build configuration list for PBXNativeTarget "LivioHTTPServer-MacTests" */;
+			buildPhases = (
+				5D3CD6C41AA0F4B300987CC1 /* Sources */,
+				5D3CD6C51AA0F4B300987CC1 /* Frameworks */,
+				5D3CD6C61AA0F4B300987CC1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5D3CD6CB1AA0F4B300987CC1 /* PBXTargetDependency */,
+			);
+			name = "LivioHTTPServer-MacTests";
+			productName = "LivioHTTPServer-MacTests";
+			productReference = 5D3CD6C81AA0F4B300987CC1 /* LivioHTTPServer-MacTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		5D4833961A9E574400252386 /* LivioHTTPServer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5D4833AD1A9E574400252386 /* Build configuration list for PBXNativeTarget "LivioHTTPServer" */;
@@ -348,6 +497,12 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = livio;
 				TargetAttributes = {
+					5D3CD6BD1AA0F4B300987CC1 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					5D3CD6C71AA0F4B300987CC1 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
 					5D4833961A9E574400252386 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -370,11 +525,27 @@
 			targets = (
 				5D4833961A9E574400252386 /* LivioHTTPServer */,
 				5D4834531A9E7B6900252386 /* LivioHTTPServerTests */,
+				5D3CD6BD1AA0F4B300987CC1 /* LivioHTTPServer-Mac */,
+				5D3CD6C71AA0F4B300987CC1 /* LivioHTTPServer-MacTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5D3CD6BC1AA0F4B300987CC1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D3CD6C61AA0F4B300987CC1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5D4833951A9E574400252386 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -392,6 +563,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5D3CD6B91AA0F4B300987CC1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D3CD6C41AA0F4B300987CC1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3CD6D01AA0F4B300987CC1 /* LivioHTTPServer_MacTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5D4833921A9E574400252386 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -427,6 +613,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		5D3CD6CB1AA0F4B300987CC1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5D3CD6BD1AA0F4B300987CC1 /* LivioHTTPServer-Mac */;
+			targetProxy = 5D3CD6CA1AA0F4B300987CC1 /* PBXContainerItemProxy */;
+		};
 		5D48345C1A9E7B6900252386 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5D4833961A9E574400252386 /* LivioHTTPServer */;
@@ -435,6 +626,86 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		5D3CD6D21AA0F4B300987CC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "LivioHTTPServer-Mac/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = LivioHTTPServer_Mac;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		5D3CD6D31AA0F4B300987CC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "LivioHTTPServer-Mac/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = LivioHTTPServer_Mac;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		5D3CD6D51AA0F4B300987CC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "LivioHTTPServer-MacTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D3CD6D61AA0F4B300987CC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "LivioHTTPServer-MacTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		5D4833AB1A9E574400252386 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -592,6 +863,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5D3CD6D11AA0F4B300987CC1 /* Build configuration list for PBXNativeTarget "LivioHTTPServer-Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D3CD6D21AA0F4B300987CC1 /* Debug */,
+				5D3CD6D31AA0F4B300987CC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		5D3CD6D41AA0F4B300987CC1 /* Build configuration list for PBXNativeTarget "LivioHTTPServer-MacTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D3CD6D51AA0F4B300987CC1 /* Debug */,
+				5D3CD6D61AA0F4B300987CC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		5D4833911A9E574400252386 /* Build configuration list for PBXProject "LivioHTTPServer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
