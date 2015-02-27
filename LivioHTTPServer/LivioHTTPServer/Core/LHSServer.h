@@ -30,9 +30,9 @@
 #import <Foundation/Foundation.h>
 
 @class GCDAsyncSocket;
-@class WebSocket;
+@class LHSWebSocket;
 
-@interface HTTPServer : NSObject <NSNetServiceDelegate>
+@interface LHSServer : NSObject <NSNetServiceDelegate>
 {
 	// Underlying asynchronous TCP/IP socket
 	GCDAsyncSocket *asyncSocket;
@@ -211,7 +211,7 @@
 
 - (BOOL)isRunning;
 
-- (void)addWebSocket:(WebSocket *)ws;
+- (void)addWebSocket:(LHSWebSocket *)ws;
 
 - (NSUInteger)numberOfHTTPConnections;
 - (NSUInteger)numberOfWebSocketConnections;

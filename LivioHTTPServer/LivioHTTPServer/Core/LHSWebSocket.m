@@ -1,5 +1,5 @@
-#import "WebSocket.h"
-#import "HTTPMessage.h"
+#import "LHSWebSocket.h"
+#import "LHSMessage.h"
 #import <CocoaAsyncSocket/CocoaAsyncSocket.h>
 #import "DDNumber.h"
 #import "DDData.h"
@@ -42,7 +42,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	return frame & 0x7F;
 }
 
-@interface WebSocket (PrivateAPI)
+@interface LHSWebSocket (PrivateAPI)
 
 - (void)readRequestBody;
 - (void)sendResponseBody;
@@ -54,7 +54,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation WebSocket
+@implementation LHSWebSocket
 {
 	BOOL isRFC6455;
 	BOOL nextFrameMasked;
@@ -62,7 +62,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	NSData *maskingKey;
 }
 
-+ (BOOL)isWebSocketRequest:(HTTPMessage *)request
++ (BOOL)isWebSocketRequest:(LHSMessage *)request
 {
 	// Request (Draft 75):
 	// 
@@ -99,7 +99,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	if (!upgradeHeaderValue || !connectionHeaderValue) {
 		isWebSocket = NO;
 	}
-	else if (![upgradeHeaderValue caseInsensitiveCompare:@"WebSocket"] == NSOrderedSame) {
+	else if (![upgradeHeaderValue caseInsensitiveCompare:@"LHSWebSocket"] == NSOrderedSame) {
 		isWebSocket = NO;
 	}
 	else if ([connectionHeaderValue rangeOfString:@"Upgrade" options:NSCaseInsensitiveSearch].location == NSNotFound) {
@@ -111,7 +111,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	return isWebSocket;
 }
 
-+ (BOOL)isVersion76Request:(HTTPMessage *)request
++ (BOOL)isVersion76Request:(LHSMessage *)request
 {
 	NSString *key1 = [request headerField:@"Sec-WebSocket-Key1"];
 	NSString *key2 = [request headerField:@"Sec-WebSocket-Key2"];
@@ -130,7 +130,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	return isVersion76;
 }
 
-+ (BOOL)isRFC6455Request:(HTTPMessage *)request
++ (BOOL)isRFC6455Request:(LHSMessage *)request
 {
 	NSString *key = [request headerField:@"Sec-WebSocket-Key"];
 	BOOL isRFC6455 = (key != nil);
@@ -146,7 +146,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 
 @synthesize websocketQueue;
 
-- (id)initWithRequest:(HTTPMessage *)aRequest socket:(GCDAsyncSocket *)socket
+- (id)initWithRequest:(LHSMessage *)aRequest socket:(GCDAsyncSocket *)socket
 {
 	// HTTPLogTrace();
 	
@@ -367,11 +367,11 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	// 8jKS'y:G*Co,Wxa-
 
 	
-	HTTPMessage *wsResponse = [[HTTPMessage alloc] initResponseWithStatusCode:101
+	LHSMessage *wsResponse = [[LHSMessage alloc] initResponseWithStatusCode:101
 	                                                              description:@"Web Socket Protocol Handshake"
 	                                                                  version:HTTPVersion1_1];
 	
-	[wsResponse setHeaderField:@"Upgrade" value:@"WebSocket"];
+	[wsResponse setHeaderField:@"Upgrade" value:@"LHSWebSocket"];
 	[wsResponse setHeaderField:@"Connection" value:@"Upgrade"];
 	
 	// Note: It appears that WebSocket-Origin and WebSocket-Location

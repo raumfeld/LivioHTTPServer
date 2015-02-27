@@ -1,9 +1,9 @@
 
 
-#import "HTTPMessage.h"
+#import "LHSMessage.h"
 
 
-@implementation HTTPMessage
+@implementation LHSMessage
 
 - (id)initEmptyRequest
 {

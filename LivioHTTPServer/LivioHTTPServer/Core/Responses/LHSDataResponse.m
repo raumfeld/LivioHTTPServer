@@ -1,9 +1,9 @@
 
 
-#import "HTTPDataResponse.h"
+#import "LHSDataResponse.h"
 
 
-@implementation HTTPDataResponse
+@implementation LHSDataResponse
 
 - (id)initWithData:(NSData *)dataParam
 {

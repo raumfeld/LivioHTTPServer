@@ -1,9 +1,9 @@
 
 
-#import "HTTPRedirectResponse.h"
+#import "LHSRedirectResponse.h"
 
 
-@implementation HTTPRedirectResponse
+@implementation LHSRedirectResponse
 
 - (id)initWithPath:(NSString *)path
 {

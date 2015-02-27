@@ -27,12 +27,48 @@
  * This library retains it's original license and is maintained by Livio.
  */
 
-#import "HTTPResponse.h"
+#import <Foundation/Foundation.h>
 
-@interface HTTPErrorResponse : NSObject <HTTPResponse> {
-    NSInteger _status;
+#if TARGET_OS_IPHONE
+  // Note: You may need to add the CFNetwork Framework to your project
+  #import <CFNetwork/CFNetwork.h>
+#endif
+
+@class LHSMessage;
+
+
+@interface LHSAuthenticationRequest : NSObject
+{
+	BOOL isBasic;
+	BOOL isDigest;
+	
+	NSString *base64Credentials;
+	
+	NSString *username;
+	NSString *realm;
+	NSString *nonce;
+	NSString *uri;
+	NSString *qop;
+	NSString *nc;
+	NSString *cnonce;
+	NSString *response;
 }
+- (id)initWithRequest:(LHSMessage *)request;
 
-- (id)initWithErrorCode:(int)httpErrorCode;
+- (BOOL)isBasic;
+- (BOOL)isDigest;
+
+// Basic
+- (NSString *)base64Credentials;
+
+// Digest
+- (NSString *)username;
+- (NSString *)realm;
+- (NSString *)nonce;
+- (NSString *)uri;
+- (NSString *)qop;
+- (NSString *)nc;
+- (NSString *)cnonce;
+- (NSString *)response;
 
 @end

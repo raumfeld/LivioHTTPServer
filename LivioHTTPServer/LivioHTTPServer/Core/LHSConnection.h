@@ -30,10 +30,10 @@
 #import <Foundation/Foundation.h>
 
 @class GCDAsyncSocket;
-@class HTTPMessage;
-@class HTTPServer;
-@class WebSocket;
-@protocol HTTPResponse;
+@class LHSMessage;
+@class LHSServer;
+@class LHSWebSocket;
+@protocol LHSResponse;
 
 
 #define HTTPConnectionDidDieNotification  @"HTTPConnectionDidDie"
@@ -42,17 +42,17 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface HTTPConfig : NSObject
+@interface LHSConfig : NSObject
 {
-	HTTPServer __weak *server;
+	LHSServer __weak *server;
 	NSString __strong *documentRoot;
 	dispatch_queue_t queue;
 }
 
-- (id)initWithServer:(HTTPServer *)server documentRoot:(NSString *)documentRoot;
-- (id)initWithServer:(HTTPServer *)server documentRoot:(NSString *)documentRoot queue:(dispatch_queue_t)q;
+- (id)initWithServer:(LHSServer *)server documentRoot:(NSString *)documentRoot;
+- (id)initWithServer:(LHSServer *)server documentRoot:(NSString *)documentRoot queue:(dispatch_queue_t)q;
 
-@property (nonatomic, weak, readonly) HTTPServer *server;
+@property (nonatomic, weak, readonly) LHSServer *server;
 @property (nonatomic, strong, readonly) NSString *documentRoot;
 @property (nonatomic, readonly) dispatch_queue_t queue;
 
@@ -62,15 +62,15 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface HTTPConnection : NSObject
+@interface LHSConnection : NSObject
 {
 	dispatch_queue_t connectionQueue;
 	GCDAsyncSocket *asyncSocket;
-	HTTPConfig *config;
+	LHSConfig *config;
 	
 	BOOL started;
 	
-	HTTPMessage *request;
+	LHSMessage *request;
 	unsigned int numHeaderLines;
 	
 	BOOL sentResponseHeaders;
@@ -78,7 +78,7 @@
 	NSString *nonce;
 	long lastNC;
 	
-	NSObject<HTTPResponse> *httpResponse;
+	NSObject<LHSResponse> *httpResponse;
 	
 	NSMutableArray *ranges;
 	NSMutableArray *ranges_headers;
@@ -93,7 +93,7 @@
 	NSMutableArray *responseDataSizes;
 }
 
-- (id)initWithAsyncSocket:(GCDAsyncSocket *)newSocket configuration:(HTTPConfig *)aConfig;
+- (id)initWithAsyncSocket:(GCDAsyncSocket *)newSocket configuration:(LHSConfig *)aConfig;
 
 - (void)start;
 - (void)stop;
@@ -119,8 +119,8 @@
 - (NSArray *)directoryIndexFileNames;
 - (NSString *)filePathForURI:(NSString *)path;
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory;
-- (NSObject<HTTPResponse> *)httpResponseForMethod:(NSString *)method URI:(NSString *)path;
-- (WebSocket *)webSocketForURI:(NSString *)path;
+- (NSObject<LHSResponse> *)httpResponseForMethod:(NSString *)method URI:(NSString *)path;
+- (LHSWebSocket *)webSocketForURI:(NSString *)path;
 
 - (void)prepareForBodyWithSize:(UInt64)contentLength;
 - (void)processBodyData:(NSData *)postDataChunk;
@@ -132,8 +132,8 @@
 - (void)handleInvalidRequest:(NSData *)data;
 - (void)handleUnknownMethod:(NSString *)method;
 
-- (NSData *)preprocessResponse:(HTTPMessage *)response;
-- (NSData *)preprocessErrorResponse:(HTTPMessage *)response;
+- (NSData *)preprocessResponse:(LHSMessage *)response;
+- (NSData *)preprocessErrorResponse:(LHSMessage *)response;
 
 - (void)finishResponse;
 
@@ -142,7 +142,7 @@
 
 @end
 
-@interface HTTPConnection (AsynchronousHTTPResponse)
-- (void)responseHasAvailableData:(NSObject<HTTPResponse> *)sender;
-- (void)responseDidAbort:(NSObject<HTTPResponse> *)sender;
+@interface LHSConnection (AsynchronousHTTPResponse)
+- (void)responseHasAvailableData:(NSObject<LHSResponse> *)sender;
+- (void)responseDidAbort:(NSObject<LHSResponse> *)sender;
 @end

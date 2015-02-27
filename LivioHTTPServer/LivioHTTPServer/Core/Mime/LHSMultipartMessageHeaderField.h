@@ -29,46 +29,23 @@
 
 #import <Foundation/Foundation.h>
 
-#if TARGET_OS_IPHONE
-  // Note: You may need to add the CFNetwork Framework to your project
-  #import <CFNetwork/CFNetwork.h>
-#endif
+//-----------------------------------------------------------------
+// interface MultipartMessageHeaderField
+//-----------------------------------------------------------------
 
-@class HTTPMessage;
-
-
-@interface HTTPAuthenticationRequest : NSObject
-{
-	BOOL isBasic;
-	BOOL isDigest;
-	
-	NSString *base64Credentials;
-	
-	NSString *username;
-	NSString *realm;
-	NSString *nonce;
-	NSString *uri;
-	NSString *qop;
-	NSString *nc;
-	NSString *cnonce;
-	NSString *response;
+@interface LHSMultipartMessageHeaderField : NSObject {
+	NSString*						name;
+    NSString*						value;
+    NSMutableDictionary*			params;
 }
-- (id)initWithRequest:(HTTPMessage *)request;
 
-- (BOOL)isBasic;
-- (BOOL)isDigest;
+@property (strong, readonly) NSString*		value;
+@property (strong, readonly) NSDictionary*	params;
+@property (strong, readonly) NSString*		name;
 
-// Basic
-- (NSString *)base64Credentials;
+//- (id) initWithLine:(NSString*) line;
+//- (id) initWithName:(NSString*) paramName value:(NSString*) paramValue;
 
-// Digest
-- (NSString *)username;
-- (NSString *)realm;
-- (NSString *)nonce;
-- (NSString *)uri;
-- (NSString *)qop;
-- (NSString *)nc;
-- (NSString *)cnonce;
-- (NSString *)response;
+- (id) initWithData:(NSData*) data contentEncoding:(NSStringEncoding) encoding;
 
 @end

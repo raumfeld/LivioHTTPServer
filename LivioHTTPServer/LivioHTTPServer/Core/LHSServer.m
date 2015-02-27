@@ -1,9 +1,9 @@
-#import "HTTPServer.h"
+#import "LHSServer.h"
 #import <CocoaAsyncSocket/CocoaAsyncSocket.h>
-#import "HTTPConnection.h"
-#import "WebSocket.h"
+#import "LHSConnection.h"
+#import "LHSWebSocket.h"
 
-@interface HTTPServer (PrivateAPI)
+@interface LHSServer (PrivateAPI)
 
 - (void)unpublishBonjour;
 - (void)publishBonjour;
@@ -17,7 +17,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation HTTPServer
+@implementation LHSServer
 
 /**
  * Standard Constructor.
@@ -45,7 +45,7 @@
 		asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue];
 		
 		// Use default connection class of HTTPConnection
-		connectionClass = [HTTPConnection self];
+		connectionClass = [LHSConnection self];
 		
 		// By default bind on all available interfaces, en1, wifi etc
 		interface = nil;
@@ -443,7 +443,7 @@
 		{
 			// Stop all HTTP connections the server owns
 			[connectionsLock lock];
-			for (HTTPConnection *connection in connections)
+			for (LHSConnection *connection in connections)
 			{
 				[connection stop];
 			}
@@ -452,7 +452,7 @@
 			
 			// Stop all WebSocket connections the server owns
 			[webSocketsLock lock];
-			for (WebSocket *webSocket in webSockets)
+			for (LHSWebSocket *webSocket in webSockets)
 			{
 				[webSocket stop];
 			}
@@ -473,7 +473,7 @@
 	return result;
 }
 
-- (void)addWebSocket:(WebSocket *)ws
+- (void)addWebSocket:(LHSWebSocket *)ws
 {
 	[webSocketsLock lock];
 	
@@ -519,7 +519,7 @@
 #pragma mark Incoming Connections
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (HTTPConfig *)config
+- (LHSConfig *)config
 {
 	// Override me if you want to provide a custom config to the new connection.
 	// 
@@ -532,12 +532,12 @@
 	// Try the apache benchmark tool (already installed on your Mac):
 	// $  ab -n 1000 -c 1 http://localhost:<port>/some_path.html
 	
-	return [[HTTPConfig alloc] initWithServer:self documentRoot:documentRoot queue:connectionQueue];
+	return [[LHSConfig alloc] initWithServer:self documentRoot:documentRoot queue:connectionQueue];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
 {
-	HTTPConnection *newConnection = (HTTPConnection *)[[connectionClass alloc] initWithAsyncSocket:newSocket
+	LHSConnection *newConnection = (LHSConnection *)[[connectionClass alloc] initWithAsyncSocket:newSocket
 	                                                                                 configuration:[self config]];
 	[connectionsLock lock];
 	[connections addObject:newConnection];

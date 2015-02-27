@@ -28,27 +28,14 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "HTTPResponse.h"
-
-@class HTTPConnection;
+#import "LHSResponse.h"
 
 
-@interface HTTPFileResponse : NSObject <HTTPResponse>
+@interface LHSRedirectResponse : NSObject <LHSResponse>
 {
-	HTTPConnection *connection;
-	
-	NSString *filePath;
-	UInt64 fileLength;
-	UInt64 fileOffset;
-	
-	BOOL aborted;
-	
-	int fileFD;
-	void *buffer;
-	NSUInteger bufferSize;
+	NSString *redirectPath;
 }
 
-- (id)initWithFilePath:(NSString *)filePath forConnection:(HTTPConnection *)connection;
-- (NSString *)filePath;
+- (id)initWithPath:(NSString *)redirectPath;
 
 @end

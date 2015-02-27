@@ -29,17 +29,17 @@
 
 #import <Foundation/Foundation.h>
 
-@class HTTPMessage;
+@class LHSMessage;
 @class GCDAsyncSocket;
 
 
 #define WebSocketDidDieNotification  @"WebSocketDidDie"
 
-@interface WebSocket : NSObject
+@interface LHSWebSocket : NSObject
 {
 	dispatch_queue_t websocketQueue;
 	
-	HTTPMessage *request;
+	LHSMessage *request;
 	GCDAsyncSocket *asyncSocket;
 	
 	NSData *term;
@@ -51,9 +51,9 @@
 	id __weak delegate;
 }
 
-+ (BOOL)isWebSocketRequest:(HTTPMessage *)request;
++ (BOOL)isWebSocketRequest:(LHSMessage *)request;
 
-- (id)initWithRequest:(HTTPMessage *)request socket:(GCDAsyncSocket *)socket;
+- (id)initWithRequest:(LHSMessage *)request socket:(GCDAsyncSocket *)socket;
 
 /**
  * Delegate option.
@@ -125,10 +125,10 @@
 @protocol WebSocketDelegate
 @optional
 
-- (void)webSocketDidOpen:(WebSocket *)ws;
+- (void)webSocketDidOpen:(LHSWebSocket *)ws;
 
-- (void)webSocket:(WebSocket *)ws didReceiveMessage:(NSString *)msg;
+- (void)webSocket:(LHSWebSocket *)ws didReceiveMessage:(NSString *)msg;
 
-- (void)webSocketDidClose:(WebSocket *)ws;
+- (void)webSocketDidClose:(LHSWebSocket *)ws;
 
 @end

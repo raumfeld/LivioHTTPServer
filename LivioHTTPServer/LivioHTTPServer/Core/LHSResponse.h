@@ -30,7 +30,7 @@
 #import <Foundation/Foundation.h>
 
 
-@protocol HTTPResponse
+@protocol LHSResponse
 
 /**
  * Returns the length of the data in bytes.

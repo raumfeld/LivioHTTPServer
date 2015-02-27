@@ -1,5 +1,5 @@
-#import "HTTPFileResponse.h"
-#import "HTTPConnection.h"
+#import "LHSFileResponse.h"
+#import "LHSConnection.h"
 
 #import <unistd.h>
 #import <fcntl.h>
@@ -8,9 +8,9 @@
 #define NULL_FD  -1
 
 
-@implementation HTTPFileResponse
+@implementation LHSFileResponse
 
-- (id)initWithFilePath:(NSString *)fpath forConnection:(HTTPConnection *)parent
+- (id)initWithFilePath:(NSString *)fpath forConnection:(LHSConnection *)parent
 {
 	if((self = [super init]))
 	{

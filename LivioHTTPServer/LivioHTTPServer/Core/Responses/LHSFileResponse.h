@@ -28,24 +28,27 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "LHSResponse.h"
 
-//-----------------------------------------------------------------
-// interface MultipartMessageHeaderField
-//-----------------------------------------------------------------
+@class LHSConnection;
 
-@interface MultipartMessageHeaderField : NSObject {
-	NSString*						name;
-    NSString*						value;
-    NSMutableDictionary*			params;
+
+@interface LHSFileResponse : NSObject <LHSResponse>
+{
+	LHSConnection *connection;
+	
+	NSString *filePath;
+	UInt64 fileLength;
+	UInt64 fileOffset;
+	
+	BOOL aborted;
+	
+	int fileFD;
+	void *buffer;
+	NSUInteger bufferSize;
 }
 
-@property (strong, readonly) NSString*		value;
-@property (strong, readonly) NSDictionary*	params;
-@property (strong, readonly) NSString*		name;
-
-//- (id) initWithLine:(NSString*) line;
-//- (id) initWithName:(NSString*) paramName value:(NSString*) paramValue;
-
-- (id) initWithData:(NSData*) data contentEncoding:(NSStringEncoding) encoding;
+- (id)initWithFilePath:(NSString *)filePath forConnection:(LHSConnection *)connection;
+- (NSString *)filePath;
 
 @end

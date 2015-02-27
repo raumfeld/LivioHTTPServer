@@ -14,16 +14,16 @@
 //-----------------------------------------------------------------
 
 
-@interface LHSMultipartFormDataParser (private)
-+ (NSData*) decodedDataFromData:(NSData*) data encoding:(int) encoding;
+@interface LHSMultipartFormDataParser ()
++ (NSData *)decodedDataFromData:(NSData *)data encoding:(int)encoding;
 
-- (int) findHeaderEnd:(NSData*) workingData fromOffset:(int) offset;
-- (int) findContentEnd:(NSData*) data fromOffset:(int) offset;
+- (int)findHeaderEnd:(NSData *)workingData fromOffset:(int)offset;
+- (int)findContentEnd:(NSData *)data fromOffset:(int)offset;
 
-- (int) numberOfBytesToLeavePendingWithData:(NSData*) data length:(NSUInteger) length encoding:(int) encoding;
-- (int) offsetTillNewlineSinceOffset:(int) offset inData:(NSData*) data;
+- (NSUInteger)numberOfBytesToLeavePendingWithData:(NSData *)data length:(NSUInteger)length encoding:(int)encoding;
+- (int)offsetTillNewlineSinceOffset:(int)offset inData:(NSData *)data;
 
-- (int) processPreamble:(NSData*) workingData;
+- (int)processPreamble:(NSData *)workingData;
 
 @end
 
@@ -238,7 +238,7 @@
 			NSUInteger sizeToPass = workingData.length - offset - sizeToLeavePending;
 
 			// if we parse BASE64 encoded data, or Quoted-Printable data, we will make sure we don't break the format
-			int leaveTrailing = [self numberOfBytesToLeavePendingWithData:data length:sizeToPass encoding:currentEncoding];
+			NSUInteger leaveTrailing = [self numberOfBytesToLeavePendingWithData:data length:sizeToPass encoding:currentEncoding];
 			sizeToPass -= leaveTrailing;
 			
 			if( sizeToPass <= 0 ) {
@@ -387,7 +387,7 @@
 }
 
 
-- (int) findContentEnd:(NSData*) data fromOffset:(int) offset {
+- (int)findContentEnd:(NSData*) data fromOffset:(int) offset {
     char* boundaryBytes = (char*) boundaryData.bytes;
     char* dataBytes = (char*) data.bytes;
     NSUInteger boundaryLength = boundaryData.length;
@@ -408,16 +408,16 @@
 }
 
 
-- (int) numberOfBytesToLeavePendingWithData:(NSData*) data length:(int) length encoding:(int) encoding {
+- (NSUInteger)numberOfBytesToLeavePendingWithData:(NSData *)data length:(NSUInteger)length encoding:(int)encoding {
 	// If we have BASE64 or Quoted-Printable encoded data, we have to be sure
 	// we don't break the format.
-	int sizeToLeavePending = 0;
+	NSUInteger sizeToLeavePending = 0;
 	
-	if( encoding == contentTransferEncoding_base64 ) {	
+	if(encoding == contentTransferEncoding_base64) {
 		char* bytes = (char*) data.bytes;
-		int i;
-		for( i = length - 1; i > 0; i++ ) {
-			if( * (uint16_t*) (bytes + i) == 0x0A0D ) {
+		NSUInteger i;
+		for(i = length - 1; i > 0; i++) {
+			if(*(uint16_t*)(bytes + i) == 0x0A0D) {
 				break;
 			}
 		}

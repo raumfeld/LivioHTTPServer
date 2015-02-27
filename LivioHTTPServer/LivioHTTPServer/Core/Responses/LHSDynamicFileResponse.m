@@ -1,13 +1,13 @@
-#import "HTTPDynamicFileResponse.h"
-#import "HTTPConnection.h"
+#import "LHSDynamicFileResponse.h"
+#import "LHSConnection.h"
 
 #define NULL_FD  -1
 
 
-@implementation HTTPDynamicFileResponse
+@implementation LHSDynamicFileResponse
 
 - (id)initWithFilePath:(NSString *)fpath
-         forConnection:(HTTPConnection *)parent
+         forConnection:(LHSConnection *)parent
              separator:(NSString *)separatorStr
  replacementDictionary:(NSDictionary *)dict
 {

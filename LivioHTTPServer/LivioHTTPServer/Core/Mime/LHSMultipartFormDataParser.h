@@ -79,11 +79,8 @@ NSMutableData*						pendingData;
 
 - (id) initWithBoundary:(NSString*) boundary formEncoding:(NSStringEncoding) formEncoding;
 
-#if __has_feature(objc_arc_weak)
-    @property(weak, readwrite) id delegate;
-#else
-    @property(weak, readwrite) id delegate;
-#endif
+
+@property(weak, readwrite) id<LHSMultipartFormDataParserDelegate> delegate;
 @property(readwrite) NSStringEncoding	formEncoding;
 
 @end

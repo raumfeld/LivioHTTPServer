@@ -1,5 +1,5 @@
-#import "HTTPAsyncFileResponse.h"
-#import "HTTPConnection.h"
+#import "LHSAsyncFileResponse.h"
+#import "LHSConnection.h"
 
 #import <unistd.h>
 #import <fcntl.h>
@@ -23,9 +23,9 @@
  * we don't open the file until we have to (until the connection starts requesting data).
 **/
 
-@implementation HTTPAsyncFileResponse
+@implementation LHSAsyncFileResponse
 
-- (id)initWithFilePath:(NSString *)fpath forConnection:(HTTPConnection *)parent
+- (id)initWithFilePath:(NSString *)fpath forConnection:(LHSConnection *)parent
 {
 	if ((self = [super init]))
 	{
