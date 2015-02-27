@@ -11,7 +11,7 @@ NSString* extractParamValue(const char* bytes, NSUInteger length, NSStringEncodi
 //-----------------------------------------------------------------
 
 
-@interface LHSMultipartMessageHeaderField (private)
+@interface LHSMultipartMessageHeaderField ()
 -(BOOL) parseHeaderValueBytes:(char*) bytes length:(NSUInteger) length encoding:(NSStringEncoding) encoding;
 @end
 

@@ -3,7 +3,7 @@
 #import "LHSConnection.h"
 #import "LHSWebSocket.h"
 
-@interface LHSServer (PrivateAPI)
+@interface LHSServer ()
 
 - (void)unpublishBonjour;
 - (void)publishBonjour;
