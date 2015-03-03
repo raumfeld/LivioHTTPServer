@@ -214,15 +214,16 @@
 {
 	// HTTPLogTrace();
 	
-	if (fileFD != NULL_FD)
+	if (fileFD != NULL_FD && fileFD != 0)
 	{
 		// HTTPLogVerbose(@"%@[%p]: Close fd[%i]", __FILE__, self, fileFD);
 		
 		close(fileFD);
 	}
 	
-	if (buffer)
+    if (buffer) {
 		free(buffer);
+    }
 	
 }
 
