@@ -112,25 +112,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	return isWebSocket;
 }
 
-+ (BOOL)isVersion76Request:(LHSMessage *)request
-{
-	NSString *key1 = [request headerField:@"Sec-WebSocket-Key1"];
-	NSString *key2 = [request headerField:@"Sec-WebSocket-Key2"];
-	
-	BOOL isVersion76;
-	
-	if (!key1 || !key2) {
-		isVersion76 = NO;
-	}
-	else {
-		isVersion76 = YES;
-	}
-	
-//	HTTPLogTrace2(@"%@: %@ - %@", __FILE__, THIS_METHOD, (isVersion76 ? @"YES" : @"NO"));
-	
-	return isVersion76;
-}
-
 + (BOOL)isRFC6455Request:(LHSMessage *)request
 {
 	NSString *key = [request headerField:@"Sec-WebSocket-Key"];
@@ -173,7 +154,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 		[asyncSocket setDelegate:self delegateQueue:websocketQueue];
 		
 		isOpen = NO;
-		isVersion76 = [[self class] isVersion76Request:request];
 		isRFC6455 = [[self class] isRFC6455Request:request];
 		
 		term = [[NSData alloc] initWithBytes:"\xFF" length:1];
@@ -226,18 +206,13 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	
 	dispatch_async(websocketQueue, ^{ @autoreleasepool {
 		
-		if (isStarted) return;
+        if (isStarted) {
+            return;
+        }
 		isStarted = YES;
-		
-		if (isVersion76)
-		{
-			[self readRequestBody];
-		}
-		else
-		{
-			[self sendResponseHeaders];
-			[self didOpen];
-		}
+        
+        [self sendResponseHeaders];
+        [self didOpen];
 	}});
 }
 
@@ -263,8 +238,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 - (void)readRequestBody
 {
 	// HTTPLogTrace();
-	
-	NSAssert(isVersion76, @"WebSocket version 75 doesn't contain a request body");
 	
 	[asyncSocket readDataToLength:8 withTimeout:LHSTimeoutNone tag:LHSTagHTTPRequestBody];
 }
@@ -322,17 +295,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 {
 	// HTTPLogTrace();
 	
-	// Request (Draft 75):
-	// 
-	// GET /demo HTTP/1.1
-	// Upgrade: WebSocket
-	// Connection: Upgrade
-	// Host: example.com
-	// Origin: http://example.com
-	// WebSocket-Protocol: sample
-	// 
-	// 
-	// Request (Draft 76):
+	// Request (RFC6455):
 	//
 	// GET /demo HTTP/1.1
 	// Upgrade: WebSocket
@@ -340,27 +303,16 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	// Host: example.com
 	// Origin: http://example.com
 	// Sec-WebSocket-Protocol: sample
-	// Sec-WebSocket-Key2: 12998 5 Y3 1  .P00
-	// Sec-WebSocket-Key1: 4 @1  46546xW%0l 1 5
-	// 
-	// ^n:ds[4U
+	// Sec-WebSocket-Key: (base64, when decoded 16 bytes)
+    // Sec-WebSocket-Version: 13
 
-	
-	// Response (Draft 75):
 	// 
-	// HTTP/1.1 101 Web Socket Protocol Handshake
-	// Upgrade: WebSocket
-	// Connection: Upgrade
-	// WebSocket-Origin: http://example.com
-	// WebSocket-Location: ws://example.com/demo
-	// WebSocket-Protocol: sample
-	// 
-	// 
-	// Response (Draft 76):
+	// Response (RFC6455):
 	//
-	// HTTP/1.1 101 WebSocket Protocol Handshake
-	// Upgrade: WebSocket
+	// HTTP/1.1 101 Switching Protocols
+	// Upgrade: websocket
 	// Connection: Upgrade
+    // Sec-WebSocket-Accept: (concatenate key with "258EAFA5-E914-47DA-95CA-C5AB0DC85B11", calculate SHA-1, base64 encode)
 	// Sec-WebSocket-Origin: http://example.com
 	// Sec-WebSocket-Location: ws://example.com/demo
 	// Sec-WebSocket-Protocol: sample
@@ -369,10 +321,10 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 
 	
 	LHSMessage *wsResponse = [[LHSMessage alloc] initResponseWithStatusCode:101
-	                                                              description:@"Web Socket Protocol Handshake"
+	                                                              description:@"Switching Protocols"
 	                                                                  version:HTTPVersion1_1];
 	
-	[wsResponse setHeaderField:@"Upgrade" value:@"LHSWebSocket"];
+	[wsResponse setHeaderField:@"Upgrade" value:@"websocket"];
 	[wsResponse setHeaderField:@"Connection" value:@"Upgrade"];
 	
 	// Note: It appears that WebSocket-Origin and WebSocket-Location
@@ -384,18 +336,19 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	// In addition to this it appears that Chrome's implementation is very picky of the values of the headers.
 	// They have to match exactly with what Chrome sent us or it will close the WebSocket.
 	
+    // TODO: Determine if still necessary
 	NSString *originValue = [self originResponseHeaderValue];
 	NSString *locationValue = [self locationResponseHeaderValue];
 	
-	NSString *originField = isVersion76 ? @"Sec-WebSocket-Origin" : @"WebSocket-Origin";
-	NSString *locationField = isVersion76 ? @"Sec-WebSocket-Location" : @"WebSocket-Location";
+	NSString *originField = @"WebSocket-Origin";
+	NSString *locationField = @"WebSocket-Location";
 	
 	[wsResponse setHeaderField:originField value:originValue];
 	[wsResponse setHeaderField:locationField value:locationValue];
 	
 	NSString *acceptValue = [self secWebSocketKeyResponseHeaderValue];
 	if (acceptValue) {
-		[wsResponse setHeaderField: @"Sec-WebSocket-Accept" value: acceptValue];
+		[wsResponse setHeaderField:@"Sec-WebSocket-Accept" value:acceptValue];
 	}
 
 	NSData *responseHeaders = [wsResponse messageData];
@@ -461,7 +414,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 {
 	// HTTPLogTrace();
 	
-	NSAssert(isVersion76, @"WebSocket version 75 doesn't contain a response body");
 	NSAssert([bodyData length] == 8, @"Invalid requestBody length");
 	
 	NSString *key1 = [request headerField:@"Sec-WebSocket-Key1"];

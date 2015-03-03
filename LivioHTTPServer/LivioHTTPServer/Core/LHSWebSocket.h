@@ -45,7 +45,6 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 	
 	BOOL isStarted;
 	BOOL isOpen;
-	BOOL isVersion76;
 	
 	id __weak delegate;
 }
