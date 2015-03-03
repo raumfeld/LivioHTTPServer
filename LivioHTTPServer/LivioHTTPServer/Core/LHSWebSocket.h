@@ -31,6 +31,7 @@
 
 @class LHSMessage;
 @class GCDAsyncSocket;
+@protocol LHSWebSocketDelegate;
 
 static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 
@@ -59,7 +60,7 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
  * In most cases it will be easier to subclass WebSocket,
  * but some circumstances may lead one to prefer standard delegate callbacks instead.
 **/
-@property (weak) id delegate;
+@property (weak) id<LHSWebSocketDelegate> delegate;
 
 /**
  * The WebSocket class is thread-safe, generally via it's GCD queue.
@@ -121,7 +122,7 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
  * One such example, you're already subclassing another class, so subclassing WebSocket isn't an option.
 **/
 
-@protocol WebSocketDelegate
+@protocol LHSWebSocketDelegate
 @optional
 
 - (void)webSocketDidOpen:(LHSWebSocket *)ws;
