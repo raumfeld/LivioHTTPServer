@@ -100,6 +100,7 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 **/
 - (void)didOpen;
 - (void)didReceiveMessage:(NSString *)msg;
+- (void)didReceiveData:(NSData *)data;
 - (void)didClose;
 
 @end
@@ -124,9 +125,8 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 @optional
 
 - (void)webSocketDidOpen:(LHSWebSocket *)ws;
-
 - (void)webSocket:(LHSWebSocket *)ws didReceiveMessage:(NSString *)msg;
-
+- (void)webSocket:(LHSWebSocket *)ws didReceiveData:(NSData *)data;
 - (void)webSocketDidClose:(LHSWebSocket *)ws;
 
 @end

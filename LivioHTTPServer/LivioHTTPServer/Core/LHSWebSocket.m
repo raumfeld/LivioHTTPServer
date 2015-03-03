@@ -546,6 +546,20 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	}
 }
 
+- (void)didReceiveData:(NSData *)data {
+    // HTTPLogTrace();
+    
+    // Override me to process incoming messages.
+    // This method is invoked on the websocketQueue.
+    //
+    // For completeness, you should invoke [super didReceiveMessage:msg] in your method.
+    
+    // Notify delegate
+    if ([delegate respondsToSelector:@selector(webSocket:didReceiveData:)]) {
+        [delegate webSocket:self didReceiveData:data];
+    }
+}
+
 - (void)didClose
 {
 	// HTTPLogTrace();
@@ -682,6 +696,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
             if (nextOpCode == LHSWebSocketTextFrame) {
                 NSString *msg = [[NSString alloc] initWithBytes:[data bytes] length:msgLength encoding:NSUTF8StringEncoding];
                 [self didReceiveMessage:msg];
+            } else if (nextOpCode == LHSWebSocketBinaryFrame) {
+                [self didReceiveData:data];
             } else {
                 [self didClose];
                 return;
