@@ -92,7 +92,7 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
  * Sends a message over the WebSocket.
  * This method is thread-safe.
  **/
-- (void)sendData:(NSData *)msg;
+- (void)sendBinaryData:(NSData *)msg;
 
 /**
  * Subclass API
