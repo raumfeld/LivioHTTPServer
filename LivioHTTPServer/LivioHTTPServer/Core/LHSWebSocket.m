@@ -112,6 +112,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 	return isWebSocket;
 }
 
+// TODO: Assume everything is RFC6455
 + (BOOL)isRFC6455Request:(LHSMessage *)request
 {
 	NSString *key = [request headerField:@"Sec-WebSocket-Key"];
@@ -147,7 +148,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
 //			// HTTPLogVerbose(@"%@[%p] Request Headers:\n%@", __FILE__, self, temp);
 //		}
 		
-		websocketQueue = dispatch_queue_create("WebSocket", NULL);
+		websocketQueue = dispatch_queue_create("com.livio.httpserver.websocket", NULL);
 		request = aRequest;
 		
 		asyncSocket = socket;
