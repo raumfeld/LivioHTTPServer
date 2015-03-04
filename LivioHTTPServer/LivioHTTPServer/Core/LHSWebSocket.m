@@ -624,7 +624,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
         case LHSTagPayloadPrefix: {
             UInt8 *pFrame = (UInt8 *)[data bytes];
             UInt8 frame = *pFrame;
-            
             if ([self isValidWebSocketFrame:frame]) {
                 nextOpCode = (frame & 0x0F);
                 [asyncSocket readDataToLength:1 withTimeout:LHSTimeoutNone tag:LHSTagPayloadLength];
@@ -635,9 +634,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
         } break;
         case LHSTagPayloadLength: {
             UInt8 frame = *(UInt8 *)[data bytes];
-            BOOL masked = WS_PAYLOAD_IS_MASKED(frame);
+            nextFrameMasked = WS_PAYLOAD_IS_MASKED(frame);
             NSUInteger length = WS_PAYLOAD_LENGTH(frame);
-            nextFrameMasked = masked;
             maskingKey = nil;
             if (length <= 125) {
                 if (nextFrameMasked) {
