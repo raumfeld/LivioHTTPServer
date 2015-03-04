@@ -27,18 +27,15 @@ static Byte const LHSWebSocketConnectionClose = 8;
 static Byte const LHSWebSocketPing = 9;
 static Byte const LHSWebSocketPong = 10;
 
-static inline BOOL WS_OP_IS_FINAL_FRAGMENT(UInt8 frame)
-{
+static inline BOOL WS_OP_IS_FINAL_FRAGMENT(UInt8 frame) {
 	return (frame & 0x80) ? YES : NO;
 }
 
-static inline BOOL WS_PAYLOAD_IS_MASKED(UInt8 frame)
-{
+static inline BOOL WS_PAYLOAD_IS_MASKED(UInt8 frame) {
 	return (frame & 0x80) ? YES : NO;
 }
 
-static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
-{
+static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 	return frame & 0x7F;
 }
 
@@ -617,8 +614,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
             UInt8 *pFrame = (UInt8 *)[data bytes];
             UInt8 frame = *pFrame;
             
-            if (frame <= 0x7F)
-            {
+            if (frame <= 0x7F) {
                 [asyncSocket readDataToData:term withTimeout:LHSTimeoutNone tag:LHSTagMessagePlusSuffix];
             } else {
                 // Unsupported frame type
@@ -629,12 +625,10 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
             UInt8 *pFrame = (UInt8 *)[data bytes];
             UInt8 frame = *pFrame;
             
-            if ([self isValidWebSocketFrame: frame]) {
+            if ([self isValidWebSocketFrame:frame]) {
                 nextOpCode = (frame & 0x0F);
                 [asyncSocket readDataToLength:1 withTimeout:LHSTimeoutNone tag:LHSTagPayloadLength];
-            }
-            else
-            {
+            } else {
                 // Unsupported frame type
                 [self didClose];
             }
@@ -661,6 +655,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
         case LHSTagPayloadLength16: {
             UInt8 *pFrame = (UInt8 *)[data bytes];
             NSUInteger length = ((NSUInteger)pFrame[0] << 8) | (NSUInteger)pFrame[1];
+            
             if (nextFrameMasked) {
                 [asyncSocket readDataToLength:4 withTimeout:LHSTimeoutNone tag:LHSTagMessageMaskingKey];
             }
@@ -682,6 +677,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame)
                 }
                 data = masked;
             }
+            
             if (nextOpCode == LHSWebSocketTextFrame) {
                 NSString *msg = [[NSString alloc] initWithBytes:[data bytes] length:msgLength encoding:NSUTF8StringEncoding];
                 [self didReceiveMessage:msg];
