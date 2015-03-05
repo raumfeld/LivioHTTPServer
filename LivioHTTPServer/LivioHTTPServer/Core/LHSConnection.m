@@ -4,9 +4,9 @@
 #import "LHSMessage.h"
 #import "LHSResponse.h"
 #import "LHSAuthenticationRequest.h"
-#import "DDNumber.h"
+#import "NSNumber+LHSNumber.h"
 #import "DDRange.h"
-#import "DDData.h"
+#import "NSData+LHSData.h"
 #import "LHSFileResponse.h"
 #import "LHSAsyncFileResponse.h"
 #import "LHSWebSocket.h"
@@ -469,14 +469,14 @@ static NSMutableArray *recentNonces;
 		NSString *HA1str = [NSString stringWithFormat:@"%@:%@:%@", [auth username], [auth realm], password];
 		NSString *HA2str = [NSString stringWithFormat:@"%@:%@", [request method], [auth uri]];
 		
-		NSString *HA1 = [[[HA1str dataUsingEncoding:NSUTF8StringEncoding] md5Digest] hexStringValue];
+		NSString *HA1 = [HA1str dataUsingEncoding:NSUTF8StringEncoding].md5.hexString;
 		
-		NSString *HA2 = [[[HA2str dataUsingEncoding:NSUTF8StringEncoding] md5Digest] hexStringValue];
+		NSString *HA2 = [HA2str dataUsingEncoding:NSUTF8StringEncoding].md5.hexString;
 		
 		NSString *responseStr = [NSString stringWithFormat:@"%@:%@:%@:%@:%@:%@",
 								 HA1, [auth nonce], [auth nc], [auth cnonce], [auth qop], HA2];
 		
-		NSString *response = [[[responseStr dataUsingEncoding:NSUTF8StringEncoding] md5Digest] hexStringValue];
+		NSString *response = [responseStr dataUsingEncoding:NSUTF8StringEncoding].md5.hexString;
 		
 		return [response isEqualToString:[auth response]];
 	}
@@ -783,7 +783,7 @@ static NSMutableArray *recentNonces;
 			// We're dealing with an individual byte number
 			
 			UInt64 byteIndex;
-			if(![NSNumber parseString:rangeComponent intoUInt64:&byteIndex]) return NO;
+			if(![NSNumber lhs_parseString:rangeComponent intoUInt64:&byteIndex]) return NO;
 			
 			if(byteIndex >= contentLength) return NO;
 			
@@ -801,8 +801,8 @@ static NSMutableArray *recentNonces;
 			
 			UInt64 r1, r2;
 			
-			BOOL hasR1 = [NSNumber parseString:r1str intoUInt64:&r1];
-			BOOL hasR2 = [NSNumber parseString:r2str intoUInt64:&r2];
+			BOOL hasR1 = [NSNumber lhs_parseString:r1str intoUInt64:&r1];
+			BOOL hasR2 = [NSNumber lhs_parseString:r2str intoUInt64:&r2];
 			
 			if (!hasR1)
 			{
@@ -2071,7 +2071,7 @@ static NSMutableArray *recentNonces;
 						return;
 					}
 					
-					if (![NSNumber parseString:(NSString *)contentLength intoUInt64:&requestContentLength])
+					if (![NSNumber lhs_parseString:(NSString *)contentLength intoUInt64:&requestContentLength])
 					{
 						NSLog(@"%s[%p]: Unable to parse Content-Length header into a valid number",
 									__FILE__, self);
@@ -2088,7 +2088,7 @@ static NSMutableArray *recentNonces;
 					// Received Content-Length header for method not expecting an upload.
 					// This better be zero...
 					
-					if (![NSNumber parseString:(NSString *)contentLength intoUInt64:&requestContentLength])
+					if (![NSNumber lhs_parseString:(NSString *)contentLength intoUInt64:&requestContentLength])
 					{
 						NSLog(@"%s[%p]: Unable to parse Content-Length header into a valid number",
 									__FILE__, self);

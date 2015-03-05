@@ -1,5 +1,5 @@
 #import "DDRange.h"
-#import "DDNumber.h"
+#import "NSNumber+LHSNumber.h"
 
 DDRange DDUnionRange(DDRange range1, DDRange range2)
 {
@@ -47,8 +47,8 @@ DDRange DDRangeFromString(NSString *aString)
 	BOOL found1 = [scanner scanCharactersFromSet:cset intoString:&str1];
 	BOOL found2 = [scanner scanCharactersFromSet:cset intoString:&str2];
 	
-	if(found1) [NSNumber parseString:str1 intoUInt64:&result.location];
-	if(found2) [NSNumber parseString:str2 intoUInt64:&result.length];
+	if(found1) [NSNumber lhs_parseString:str1 intoUInt64:&result.location];
+	if(found2) [NSNumber lhs_parseString:str2 intoUInt64:&result.length];
 	
 	return result;
 }

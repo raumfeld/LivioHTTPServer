@@ -1,6 +1,6 @@
 
 #import "LHSMultipartFormDataParser.h"
-#import "DDData.h"
+#import "NSData+LHSData.h"
 
 #ifdef __x86_64__
 #define FMTNSINT "li"

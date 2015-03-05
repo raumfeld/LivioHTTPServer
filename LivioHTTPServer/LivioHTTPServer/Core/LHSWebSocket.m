@@ -1,8 +1,8 @@
 #import "LHSWebSocket.h"
 #import "LHSMessage.h"
 #import <CocoaAsyncSocket/CocoaAsyncSocket.h>
-#import "DDNumber.h"
-#import "DDData.h"
+#import "NSNumber+LHSNumber.h"
+#import "NSData+LHSData.h"
 
 static NSInteger const LHSTimeoutNone = -1;
 static NSInteger const LHSTimeoutRequestBody = 10;
@@ -286,7 +286,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 - (NSString *)secWebSocketKeyResponseHeaderValue {
 	NSString *key = [request headerField: @"Sec-WebSocket-Key"];
 	NSString *guid = @"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-    return [[[[key stringByAppendingString: guid] dataUsingEncoding:NSUTF8StringEncoding] sha1Digest] base64EncodedStringWithOptions:kNilOptions];
+    return [[[key stringByAppendingString: guid] dataUsingEncoding:NSUTF8StringEncoding].sha1 base64EncodedStringWithOptions:kNilOptions];
 }
 
 - (void)sendResponseHeaders
@@ -429,7 +429,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 	
 	// Hash the data using MD5
 	
-	NSData *responseBody = [data md5Digest];
+	NSData *responseBody = data.md5;
 	
 	[asyncSocket writeData:responseBody withTimeout:LHSTimeoutNone tag:LHSTagHTTPResponseBody];
 	

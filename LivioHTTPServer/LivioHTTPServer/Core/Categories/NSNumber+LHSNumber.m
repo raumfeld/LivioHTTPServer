@@ -1,9 +1,9 @@
-#import "DDNumber.h"
+#import "NSNumber+LHSNumber.h"
 
 
-@implementation NSNumber (DDNumber)
+@implementation NSNumber (LHSNumber)
 
-+ (BOOL)parseString:(NSString *)str intoSInt64:(SInt64 *)pNum
++ (BOOL)lhs_parseString:(NSString *)str intoSInt64:(SInt64 *)pNum
 {
 	if(str == nil)
 	{
@@ -23,7 +23,7 @@
 		return YES;
 }
 
-+ (BOOL)parseString:(NSString *)str intoUInt64:(UInt64 *)pNum
++ (BOOL)lhs_parseString:(NSString *)str intoUInt64:(UInt64 *)pNum
 {
 	if(str == nil)
 	{
@@ -43,7 +43,7 @@
 		return YES;
 }
 
-+ (BOOL)parseString:(NSString *)str intoNSInteger:(NSInteger *)pNum
++ (BOOL)lhs_parseString:(NSString *)str intoNSInteger:(NSInteger *)pNum
 {
 	if(str == nil)
 	{
@@ -64,7 +64,7 @@
 		return YES;
 }
 
-+ (BOOL)parseString:(NSString *)str intoNSUInteger:(NSUInteger *)pNum
++ (BOOL)lhs_parseString:(NSString *)str intoNSUInteger:(NSUInteger *)pNum
 {
 	if(str == nil)
 	{

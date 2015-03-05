@@ -29,10 +29,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSData (DDData)
+@interface NSData (LHSData)
 
-- (NSData *)md5Digest;
-- (NSData *)sha1Digest;
-- (NSString *)hexStringValue;
+// Computed properties
+@property (copy, nonatomic, readonly) NSData *md5;
+@property (copy, nonatomic, readonly) NSData *sha1;
+@property (copy, nonatomic, readonly) NSString *hexString;
 
 @end
