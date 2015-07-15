@@ -67,10 +67,9 @@
  * returns what you want when its description method is invoked.
 **/
 
-@interface LHSDynamicFileResponse : LHSAsyncFileResponse
-{
-	NSData *separator;
-	NSDictionary *replacementDict;
+@interface LHSDynamicFileResponse : LHSAsyncFileResponse {
+    NSData *separator;
+    NSDictionary *replacementDict;
 }
 
 - (id)initWithFilePath:(NSString *)filePath

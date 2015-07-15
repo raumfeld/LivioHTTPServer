@@ -30,28 +30,27 @@
 #import <Foundation/Foundation.h>
 
 #if TARGET_OS_IPHONE
-  // Note: You may need to add the CFNetwork Framework to your project
-  #import <CFNetwork/CFNetwork.h>
+// Note: You may need to add the CFNetwork Framework to your project
+#import <CFNetwork/CFNetwork.h>
 #endif
 
 @class LHSMessage;
 
 
-@interface LHSAuthenticationRequest : NSObject
-{
-	BOOL isBasic;
-	BOOL isDigest;
-	
-	NSString *base64Credentials;
-	
-	NSString *username;
-	NSString *realm;
-	NSString *nonce;
-	NSString *uri;
-	NSString *qop;
-	NSString *nc;
-	NSString *cnonce;
-	NSString *response;
+@interface LHSAuthenticationRequest : NSObject {
+    BOOL isBasic;
+    BOOL isDigest;
+
+    NSString *base64Credentials;
+
+    NSString *username;
+    NSString *realm;
+    NSString *nonce;
+    NSString *uri;
+    NSString *qop;
+    NSString *nc;
+    NSString *cnonce;
+    NSString *response;
 }
 - (id)initWithRequest:(LHSMessage *)request;
 

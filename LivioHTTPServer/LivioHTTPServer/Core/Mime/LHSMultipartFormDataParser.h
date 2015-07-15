@@ -47,13 +47,13 @@ Multipart/form-data http://tools.ietf.org/html/rfc2388
 // protocol MultipartFormDataParser
 //-----------------------------------------------------------------
 
-@protocol LHSMultipartFormDataParserDelegate <NSObject> 
+@protocol LHSMultipartFormDataParserDelegate <NSObject>
 @optional
-- (void) processContent:(NSData*) data WithHeader:(LHSMultipartMessageHeader*) header;
-- (void) processEndOfPartWithHeader:(LHSMultipartMessageHeader*) header;
-- (void) processPreambleData:(NSData*) data;
-- (void) processEpilogueData:(NSData*) data;
-- (void) processStartOfPartWithHeader:(LHSMultipartMessageHeader*) header;
+- (void)processContent:(NSData *)data WithHeader:(LHSMultipartMessageHeader *)header;
+- (void)processEndOfPartWithHeader:(LHSMultipartMessageHeader *)header;
+- (void)processPreambleData:(NSData *)data;
+- (void)processEpilogueData:(NSData *)data;
+- (void)processStartOfPartWithHeader:(LHSMultipartMessageHeader *)header;
 @end
 
 //-----------------------------------------------------------------
@@ -61,26 +61,26 @@ Multipart/form-data http://tools.ietf.org/html/rfc2388
 //-----------------------------------------------------------------
 
 @interface LHSMultipartFormDataParser : NSObject {
-NSMutableData*						pendingData;
-    NSData*							boundaryData;
-    LHSMultipartMessageHeader*			currentHeader;
+    NSMutableData *pendingData;
+    NSData *boundaryData;
+    LHSMultipartMessageHeader *currentHeader;
 
-	BOOL							waitingForCRLF;
-	BOOL							reachedEpilogue;
-	BOOL							processedPreamble;
-	BOOL							checkForContentEnd;
+    BOOL waitingForCRLF;
+    BOOL reachedEpilogue;
+    BOOL processedPreamble;
+    BOOL checkForContentEnd;
 
-	__weak id<LHSMultipartFormDataParserDelegate>   delegate;
-	int                                             currentEncoding;
-	NSStringEncoding                                formEncoding;
+    __weak id<LHSMultipartFormDataParserDelegate> delegate;
+    int currentEncoding;
+    NSStringEncoding formEncoding;
 }
 
-- (BOOL) appendData:(NSData*) data;
+- (BOOL)appendData:(NSData *)data;
 
-- (id) initWithBoundary:(NSString*) boundary formEncoding:(NSStringEncoding) formEncoding;
+- (id)initWithBoundary:(NSString *)boundary formEncoding:(NSStringEncoding)formEncoding;
 
 
-@property(weak, readwrite) id<LHSMultipartFormDataParserDelegate> delegate;
-@property(readwrite) NSStringEncoding	formEncoding;
+@property (weak, readwrite) id<LHSMultipartFormDataParserDelegate> delegate;
+@property (readwrite) NSStringEncoding formEncoding;
 
 @end

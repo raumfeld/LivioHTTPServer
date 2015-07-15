@@ -32,38 +32,37 @@
 @class STCPSocket;
 @class LHSWebSocket;
 
-@interface LHSServer : NSObject <NSNetServiceDelegate>
-{
-	// Underlying asynchronous TCP/IP socket
-	STCPSocket *asyncSocket;
-	
-	// Dispatch queues
-	dispatch_queue_t serverQueue;
-	dispatch_queue_t connectionQueue;
-	void *IsOnServerQueueKey;
-	void *IsOnConnectionQueueKey;
-	
-	// HTTP server configuration
-	NSString *documentRoot;
-	Class connectionClass;
-	NSString *interface;
-	UInt16 port;
-	
-	// NSNetService and related variables
-	NSNetService *netService;
-	NSString *domain;
-	NSString *type;
-	NSString *name;
-	NSString *publishedName;
-	NSDictionary *txtRecordDictionary;
-	
-	// Connection management
-	NSMutableArray *connections;
-	NSMutableArray *webSockets;
-	NSLock *connectionsLock;
-	NSLock *webSocketsLock;
-	
-	BOOL isRunning;
+@interface LHSServer : NSObject <NSNetServiceDelegate> {
+    // Underlying asynchronous TCP/IP socket
+    STCPSocket *asyncSocket;
+
+    // Dispatch queues
+    dispatch_queue_t serverQueue;
+    dispatch_queue_t connectionQueue;
+    void *IsOnServerQueueKey;
+    void *IsOnConnectionQueueKey;
+
+    // HTTP server configuration
+    NSString *documentRoot;
+    Class connectionClass;
+    NSString *interface;
+    UInt16 port;
+
+    // NSNetService and related variables
+    NSNetService *netService;
+    NSString *domain;
+    NSString *type;
+    NSString *name;
+    NSString *publishedName;
+    NSDictionary *txtRecordDictionary;
+
+    // Connection management
+    NSMutableArray *connections;
+    NSMutableArray *webSockets;
+    NSLock *connectionsLock;
+    NSLock *webSocketsLock;
+
+    BOOL isRunning;
 }
 
 /**

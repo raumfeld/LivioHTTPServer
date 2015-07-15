@@ -31,10 +31,9 @@
 #import "LHSResponse.h"
 
 
-@interface LHSDataResponse : NSObject <LHSResponse>
-{
-	NSUInteger offset;
-	NSData *data;
+@interface LHSDataResponse : NSObject <LHSResponse> {
+    NSUInteger offset;
+    NSData *data;
 }
 
 - (id)initWithData:(NSData *)data;

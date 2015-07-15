@@ -2,21 +2,19 @@
 
 @implementation LHSErrorResponse
 
--(id)initWithErrorCode:(int)httpErrorCode
-{
-    if ((self = [super init]))
-    {
+- (id)initWithErrorCode:(int)httpErrorCode {
+    if ((self = [super init])) {
         _status = httpErrorCode;
     }
 
     return self;
 }
 
-- (UInt64) contentLength {
+- (UInt64)contentLength {
     return 0;
 }
 
-- (UInt64) offset {
+- (UInt64)offset {
     return 0;
 }
 
@@ -24,15 +22,15 @@
     ;
 }
 
-- (NSData*) readDataOfLength:(NSUInteger)length {
+- (NSData *)readDataOfLength:(NSUInteger)length {
     return nil;
 }
 
-- (BOOL) isDone {
+- (BOOL)isDone {
     return YES;
 }
 
-- (NSInteger) status {
+- (NSInteger)status {
     return _status;
 }
 @end

@@ -36,17 +36,15 @@
 @protocol LHSResponse;
 
 
-#define HTTPConnectionDidDieNotification  @"HTTPConnectionDidDie"
+#define HTTPConnectionDidDieNotification @"HTTPConnectionDidDie"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma mark -
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface LHSConfig : NSObject
-{
-	LHSServer __weak *server;
-	NSString __strong *documentRoot;
-	dispatch_queue_t queue;
+@interface LHSConfig : NSObject {
+    LHSServer __weak *server;
+    NSString __strong *documentRoot;
+    dispatch_queue_t queue;
 }
 
 - (id)initWithServer:(LHSServer *)server documentRoot:(NSString *)documentRoot;
@@ -58,39 +56,37 @@
 
 @end
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface LHSConnection : NSObject
-{
-	dispatch_queue_t connectionQueue;
-	STCPSocket *asyncSocket;
-	LHSConfig *config;
-	
-	BOOL started;
-	
-	LHSMessage *request;
-	unsigned int numHeaderLines;
-	
-	BOOL sentResponseHeaders;
-	
-	NSString *nonce;
-	long lastNC;
-	
-	NSObject<LHSResponse> *httpResponse;
-	
-	NSMutableArray *ranges;
-	NSMutableArray *ranges_headers;
-	NSString *ranges_boundry;
-	int rangeIndex;
-	
-	UInt64 requestContentLength;
-	UInt64 requestContentLengthReceived;
-	UInt64 requestChunkSize;
-	UInt64 requestChunkSizeReceived;
-  
-	NSMutableArray *responseDataSizes;
+#pragma mark -
+
+@interface LHSConnection : NSObject {
+    dispatch_queue_t connectionQueue;
+    STCPSocket *asyncSocket;
+    LHSConfig *config;
+
+    BOOL started;
+
+    LHSMessage *request;
+    unsigned int numHeaderLines;
+
+    BOOL sentResponseHeaders;
+
+    NSString *nonce;
+    long lastNC;
+
+    NSObject<LHSResponse> *httpResponse;
+
+    NSMutableArray *ranges;
+    NSMutableArray *ranges_headers;
+    NSString *ranges_boundry;
+    int rangeIndex;
+
+    UInt64 requestContentLength;
+    UInt64 requestContentLengthReceived;
+    UInt64 requestChunkSize;
+    UInt64 requestChunkSizeReceived;
+
+    NSMutableArray *responseDataSizes;
 }
 
 - (id)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConfig *)aConfig;

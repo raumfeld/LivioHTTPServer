@@ -31,9 +31,8 @@
 #import "LHSResponse.h"
 
 
-@interface LHSRedirectResponse : NSObject <LHSResponse>
-{
-	NSString *redirectPath;
+@interface LHSRedirectResponse : NSObject <LHSResponse> {
+    NSString *redirectPath;
 }
 
 - (id)initWithPath:(NSString *)redirectPath;

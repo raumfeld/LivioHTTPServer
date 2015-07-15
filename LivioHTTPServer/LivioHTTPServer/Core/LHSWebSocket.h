@@ -35,19 +35,18 @@
 
 static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 
-@interface LHSWebSocket : NSObject
-{
-	dispatch_queue_t websocketQueue;
-	
-	LHSMessage *request;
-	STCPSocket *asyncSocket;
-	
-	NSData *term;
-	
-	BOOL isStarted;
-	BOOL isOpen;
-	
-	id __weak delegate;
+@interface LHSWebSocket : NSObject {
+    dispatch_queue_t websocketQueue;
+
+    LHSMessage *request;
+    STCPSocket *asyncSocket;
+
+    NSData *term;
+
+    BOOL isStarted;
+    BOOL isOpen;
+
+    id __weak delegate;
 }
 
 + (BOOL)isWebSocketRequest:(LHSMessage *)request;
@@ -106,9 +105,8 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 
 @end
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma mark -
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * There are two ways to create your own custom WebSocket:

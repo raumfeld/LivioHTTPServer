@@ -4,7 +4,7 @@
 #import <unistd.h>
 #import <fcntl.h>
 
-#define NULL_FD  -1
+#define NULL_FD -1
 
 /**
  * Architecure overview:
@@ -25,372 +25,334 @@
 
 @implementation LHSAsyncFileResponse
 
-- (id)initWithFilePath:(NSString *)fpath forConnection:(LHSConnection *)parent
-{
-	if ((self = [super init]))
-	{
-		// HTTPLogTrace();
-		
-		connection = parent; // Parents retain children, children do NOT retain parents
-		
-		fileFD = NULL_FD;
-		filePath = [fpath copy];
-		if (filePath == nil)
-		{
-			NSLog(@"%s: Init failed - Nil filePath", __FILE__);
-			
-			return nil;
-		}
-		
-		NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:NULL];
-		if (fileAttributes == nil)
-		{
-			NSLog(@"%s: Init failed - Unable to get file attributes. filePath: %@", __FILE__, filePath);
-			
-			return nil;
-		}
-		
-		fileLength = (UInt64)[[fileAttributes objectForKey:NSFileSize] unsignedLongLongValue];
-		fileOffset = 0;
-		
-		aborted = NO;
-		
-		// We don't bother opening the file here.
-		// If this is a HEAD request we only need to know the fileLength.
-	}
-	return self;
+- (id)initWithFilePath:(NSString *)fpath forConnection:(LHSConnection *)parent {
+    if ((self = [super init])) {
+        // HTTPLogTrace();
+
+        connection = parent; // Parents retain children, children do NOT retain parents
+
+        fileFD = NULL_FD;
+        filePath = [fpath copy];
+        if (filePath == nil) {
+            NSLog(@"%s: Init failed - Nil filePath", __FILE__);
+
+            return nil;
+        }
+
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:NULL];
+        if (fileAttributes == nil) {
+            NSLog(@"%s: Init failed - Unable to get file attributes. filePath: %@", __FILE__, filePath);
+
+            return nil;
+        }
+
+        fileLength = (UInt64)[[fileAttributes objectForKey:NSFileSize] unsignedLongLongValue];
+        fileOffset = 0;
+
+        aborted = NO;
+
+        // We don't bother opening the file here.
+        // If this is a HEAD request we only need to know the fileLength.
+    }
+    return self;
 }
 
-- (void)abort
-{
-	// HTTPLogTrace();
-	
-	[connection responseDidAbort:self];
-	aborted = YES;
+- (void)abort {
+    // HTTPLogTrace();
+
+    [connection responseDidAbort:self];
+    aborted = YES;
 }
 
-- (void)processReadBuffer
-{
-	// This method is here to allow superclasses to perform post-processing of the data.
-	// For an example, see the HTTPDynamicFileResponse class.
-	// 
-	// At this point, the readBuffer has readBufferOffset bytes available.
-	// This method is in charge of updating the readBufferOffset.
-	// Failure to do so will cause the readBuffer to grow to fileLength. (Imagine a 1 GB file...)
-	
-	// Copy the data out of the temporary readBuffer.
-	data = [[NSData alloc] initWithBytes:readBuffer length:readBufferOffset];
-	
-	// Reset the read buffer.
-	readBufferOffset = 0;
-	
-	// Notify the connection that we have data available for it.
-	[connection responseHasAvailableData:self];
+- (void)processReadBuffer {
+    // This method is here to allow superclasses to perform post-processing of the data.
+    // For an example, see the HTTPDynamicFileResponse class.
+    //
+    // At this point, the readBuffer has readBufferOffset bytes available.
+    // This method is in charge of updating the readBufferOffset.
+    // Failure to do so will cause the readBuffer to grow to fileLength. (Imagine a 1 GB file...)
+
+    // Copy the data out of the temporary readBuffer.
+    data = [[NSData alloc] initWithBytes:readBuffer length:readBufferOffset];
+
+    // Reset the read buffer.
+    readBufferOffset = 0;
+
+    // Notify the connection that we have data available for it.
+    [connection responseHasAvailableData:self];
 }
 
-- (void)pauseReadSource
-{
-	if (!readSourceSuspended)
-	{
-		// HTTPLogVerbose(@"%@[%p]: Suspending readSource", __FILE__, self);
-		
-		readSourceSuspended = YES;
-		dispatch_suspend(readSource);
-	}
+- (void)pauseReadSource {
+    if (!readSourceSuspended) {
+        // HTTPLogVerbose(@"%@[%p]: Suspending readSource", __FILE__, self);
+
+        readSourceSuspended = YES;
+        dispatch_suspend(readSource);
+    }
 }
 
-- (void)resumeReadSource
-{
-	if (readSourceSuspended)
-	{
-		// HTTPLogVerbose(@"%@[%p]: Resuming readSource", __FILE__, self);
-		
-		readSourceSuspended = NO;
-		dispatch_resume(readSource);
-	}
+- (void)resumeReadSource {
+    if (readSourceSuspended) {
+        // HTTPLogVerbose(@"%@[%p]: Resuming readSource", __FILE__, self);
+
+        readSourceSuspended = NO;
+        dispatch_resume(readSource);
+    }
 }
 
-- (void)cancelReadSource
-{
-	// HTTPLogVerbose(@"%@[%p]: Canceling readSource", __FILE__, self);
-	
-	dispatch_source_cancel(readSource);
-	
-	// Cancelling a dispatch source doesn't
-	// invoke the cancel handler if the dispatch source is paused.
-	
-	if (readSourceSuspended)
-	{
-		readSourceSuspended = NO;
-		dispatch_resume(readSource);
-	}
+- (void)cancelReadSource {
+    // HTTPLogVerbose(@"%@[%p]: Canceling readSource", __FILE__, self);
+
+    dispatch_source_cancel(readSource);
+
+    // Cancelling a dispatch source doesn't
+    // invoke the cancel handler if the dispatch source is paused.
+
+    if (readSourceSuspended) {
+        readSourceSuspended = NO;
+        dispatch_resume(readSource);
+    }
 }
 
-- (BOOL)openFileAndSetupReadSource
-{
-	// HTTPLogTrace();
-	
-	fileFD = open([filePath UTF8String], (O_RDONLY | O_NONBLOCK));
-	if (fileFD == NULL_FD)
-	{
-		NSLog(@"%s: Unable to open file. filePath: %@", __FILE__, filePath);
-		
-		return NO;
-	}
-	
-	// HTTPLogVerbose(@"%@[%p]: Open fd[%i] -> %@", __FILE__, self, fileFD, filePath);
-	
-	readQueue = dispatch_queue_create("HTTPAsyncFileResponse", NULL);
-	readSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, fileFD, 0, readQueue);
-	
-	
-	dispatch_source_set_event_handler(readSource, ^{
-		
-//		HTTPLogTrace2(@"%@: eventBlock - fd[%i]", __FILE__, fileFD);
-		
-		// Determine how much data we should read.
-		// 
-		// It is OK if we ask to read more bytes than exist in the file.
-		// It is NOT OK to over-allocate the buffer.
-		
-		unsigned long long _bytesAvailableOnFD = dispatch_source_get_data(readSource);
-		
-		UInt64 _bytesLeftInFile = fileLength - readOffset;
-		
-		NSUInteger bytesAvailableOnFD;
-		NSUInteger bytesLeftInFile;
-		
-		bytesAvailableOnFD = (_bytesAvailableOnFD > NSUIntegerMax) ? NSUIntegerMax : (NSUInteger)_bytesAvailableOnFD;
-		bytesLeftInFile    = (_bytesLeftInFile    > NSUIntegerMax) ? NSUIntegerMax : (NSUInteger)_bytesLeftInFile;
-		
-		NSUInteger bytesLeftInRequest = readRequestLength - readBufferOffset;
-		
-		NSUInteger bytesLeft = MIN(bytesLeftInRequest, bytesLeftInFile);
-		
-		NSUInteger bytesToRead = MIN(bytesAvailableOnFD, bytesLeft);
-		
-		// Make sure buffer is big enough for read request.
-		// Do not over-allocate.
-		
-		if (readBuffer == NULL || bytesToRead > (readBufferSize - readBufferOffset))
-		{
-			readBufferSize = bytesToRead;
-			readBuffer = reallocf(readBuffer, (size_t)bytesToRead);
-			
-			if (readBuffer == NULL)
-			{
-				NSLog(@"%s[%p]: Unable to allocate buffer", __FILE__, self);
-				
-				[self pauseReadSource];
-				[self abort];
-				
-				return;
-			}
-		}
-		
-		// Perform the read
-		
-		// HTTPLogVerbose(@"%@[%p]: Attempting to read %lu bytes from file", __FILE__, self, (unsigned long)bytesToRead);
-		
-		ssize_t result = read(fileFD, readBuffer + readBufferOffset, (size_t)bytesToRead);
-		
-		// Check the results
-		if (result < 0)
-		{
-			NSLog(@"%s: Error(%i) reading file(%@)", __FILE__, errno, filePath);
-			
-			[self pauseReadSource];
-			[self abort];
-		}
-		else if (result == 0)
-		{
-			NSLog(@"%s: Read EOF on file(%@)", __FILE__, filePath);
-			
-			[self pauseReadSource];
-			[self abort];
-		}
-		else // (result > 0)
-		{
-			// HTTPLogVerbose(@"%@[%p]: Read %lu bytes from file", __FILE__, self, (unsigned long)result);
-			
-			readOffset += result;
-			readBufferOffset += result;
-			
-			[self pauseReadSource];
-			[self processReadBuffer];
-		}
-		
-	});
-	
-	int theFileFD = fileFD;
-	#if !OS_OBJECT_USE_OBJC
-	dispatch_source_t theReadSource = readSource;
-	#endif
-	
-	dispatch_source_set_cancel_handler(readSource, ^{
-		
-		// Do not access self from within this block in any way, shape or form.
-		// 
-		// Note: You access self if you reference an iVar.
-		
+- (BOOL)openFileAndSetupReadSource {
+    // HTTPLogTrace();
+
+    fileFD = open([filePath UTF8String], (O_RDONLY | O_NONBLOCK));
+    if (fileFD == NULL_FD) {
+        NSLog(@"%s: Unable to open file. filePath: %@", __FILE__, filePath);
+
+        return NO;
+    }
+
+    // HTTPLogVerbose(@"%@[%p]: Open fd[%i] -> %@", __FILE__, self, fileFD, filePath);
+
+    readQueue = dispatch_queue_create("HTTPAsyncFileResponse", NULL);
+    readSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, fileFD, 0, readQueue);
+
+
+    dispatch_source_set_event_handler(readSource, ^{
+
+      //		HTTPLogTrace2(@"%@: eventBlock - fd[%i]", __FILE__, fileFD);
+
+      // Determine how much data we should read.
+      //
+      // It is OK if we ask to read more bytes than exist in the file.
+      // It is NOT OK to over-allocate the buffer.
+
+      unsigned long long _bytesAvailableOnFD = dispatch_source_get_data(readSource);
+
+      UInt64 _bytesLeftInFile = fileLength - readOffset;
+
+      NSUInteger bytesAvailableOnFD;
+      NSUInteger bytesLeftInFile;
+
+      bytesAvailableOnFD = (_bytesAvailableOnFD > NSUIntegerMax) ? NSUIntegerMax : (NSUInteger)_bytesAvailableOnFD;
+      bytesLeftInFile = (_bytesLeftInFile > NSUIntegerMax) ? NSUIntegerMax : (NSUInteger)_bytesLeftInFile;
+
+      NSUInteger bytesLeftInRequest = readRequestLength - readBufferOffset;
+
+      NSUInteger bytesLeft = MIN(bytesLeftInRequest, bytesLeftInFile);
+
+      NSUInteger bytesToRead = MIN(bytesAvailableOnFD, bytesLeft);
+
+      // Make sure buffer is big enough for read request.
+      // Do not over-allocate.
+
+      if (readBuffer == NULL || bytesToRead > (readBufferSize - readBufferOffset)) {
+          readBufferSize = bytesToRead;
+          readBuffer = reallocf(readBuffer, (size_t)bytesToRead);
+
+          if (readBuffer == NULL) {
+              NSLog(@"%s[%p]: Unable to allocate buffer", __FILE__, self);
+
+              [self pauseReadSource];
+              [self abort];
+
+              return;
+          }
+      }
+
+      // Perform the read
+
+      // HTTPLogVerbose(@"%@[%p]: Attempting to read %lu bytes from file", __FILE__, self, (unsigned long)bytesToRead);
+
+      ssize_t result = read(fileFD, readBuffer + readBufferOffset, (size_t)bytesToRead);
+
+      // Check the results
+      if (result < 0) {
+          NSLog(@"%s: Error(%i) reading file(%@)", __FILE__, errno, filePath);
+
+          [self pauseReadSource];
+          [self abort];
+      } else if (result == 0) {
+          NSLog(@"%s: Read EOF on file(%@)", __FILE__, filePath);
+
+          [self pauseReadSource];
+          [self abort];
+      } else // (result > 0)
+      {
+          // HTTPLogVerbose(@"%@[%p]: Read %lu bytes from file", __FILE__, self, (unsigned long)result);
+
+          readOffset += result;
+          readBufferOffset += result;
+
+          [self pauseReadSource];
+          [self processReadBuffer];
+      }
+
+    });
+
+    int theFileFD = fileFD;
+#if !OS_OBJECT_USE_OBJC
+    dispatch_source_t theReadSource = readSource;
+#endif
+
+    dispatch_source_set_cancel_handler(readSource, ^{
+
+// Do not access self from within this block in any way, shape or form.
+//
+// Note: You access self if you reference an iVar.
+
 //		HTTPLogTrace2(@"%@: cancelBlock - Close fd[%i]", __FILE__, theFileFD);
-		
-		#if !OS_OBJECT_USE_OBJC
-		dispatch_release(theReadSource);
-		#endif
-		close(theFileFD);
-	});
-	
-	readSourceSuspended = YES;
-	
-	return YES;
+
+#if !OS_OBJECT_USE_OBJC
+      dispatch_release(theReadSource);
+#endif
+      close(theFileFD);
+    });
+
+    readSourceSuspended = YES;
+
+    return YES;
 }
 
-- (BOOL)openFileIfNeeded
-{
-	if (aborted)
-	{
-		// The file operation has been aborted.
-		// This could be because we failed to open the file,
-		// or the reading process failed.
-		return NO;
-	}
-	
-	if (fileFD != NULL_FD)
-	{
-		// File has already been opened.
-		return YES;
-	}
-	
-	return [self openFileAndSetupReadSource];
-}	
+- (BOOL)openFileIfNeeded {
+    if (aborted) {
+        // The file operation has been aborted.
+        // This could be because we failed to open the file,
+        // or the reading process failed.
+        return NO;
+    }
 
-- (UInt64)contentLength
-{
-//	HTTPLogTrace2(@"%@[%p]: contentLength - %llu", __FILE__, self, fileLength);
-	
-	return fileLength;
+    if (fileFD != NULL_FD) {
+        // File has already been opened.
+        return YES;
+    }
+
+    return [self openFileAndSetupReadSource];
 }
 
-- (UInt64)offset
-{
-	// HTTPLogTrace();
-	
-	return fileOffset;
+- (UInt64)contentLength {
+    //	HTTPLogTrace2(@"%@[%p]: contentLength - %llu", __FILE__, self, fileLength);
+
+    return fileLength;
 }
 
-- (void)setOffset:(UInt64)offset
-{
-//	HTTPLogTrace2(@"%@[%p]: setOffset:%llu", __FILE__, self, offset);
-	
-	if (![self openFileIfNeeded])
-	{
-		// File opening failed,
-		// or response has been aborted due to another error.
-		return;
-	}
-	
-	fileOffset = offset;
-	readOffset = offset;
-	
-	off_t result = lseek(fileFD, (off_t)offset, SEEK_SET);
-	if (result == -1)
-	{
-		NSLog(@"%s[%p]: lseek failed - errno(%i) filePath(%@)", __FILE__, self, errno, filePath);
-		
-		[self abort];
-	}
+- (UInt64)offset {
+    // HTTPLogTrace();
+
+    return fileOffset;
 }
 
-- (NSData *)readDataOfLength:(NSUInteger)length
-{
-//	HTTPLogTrace2(@"%@[%p]: readDataOfLength:%lu", __FILE__, self, (unsigned long)length);
-	
-	if (data)
-	{
-		NSUInteger dataLength = [data length];
-		
-		// HTTPLogVerbose(@"%@[%p]: Returning data of length %lu", __FILE__, self, (unsigned long)dataLength);
-		
-		fileOffset += dataLength;
-		
-		NSData *result = data;
-		data = nil;
-		
-		return result;
-	}
-	else
-	{
-		if (![self openFileIfNeeded])
-		{
-			// File opening failed,
-			// or response has been aborted due to another error.
-			return nil;
-		}
-		
-		dispatch_sync(readQueue, ^{
-			
-			NSAssert(readSourceSuspended, @"Invalid logic - perhaps HTTPConnection has changed.");
-			
-			readRequestLength = length;
-			[self resumeReadSource];
-		});
-		
-		return nil;
-	}
+- (void)setOffset:(UInt64)offset {
+    //	HTTPLogTrace2(@"%@[%p]: setOffset:%llu", __FILE__, self, offset);
+
+    if (![self openFileIfNeeded]) {
+        // File opening failed,
+        // or response has been aborted due to another error.
+        return;
+    }
+
+    fileOffset = offset;
+    readOffset = offset;
+
+    off_t result = lseek(fileFD, (off_t)offset, SEEK_SET);
+    if (result == -1) {
+        NSLog(@"%s[%p]: lseek failed - errno(%i) filePath(%@)", __FILE__, self, errno, filePath);
+
+        [self abort];
+    }
 }
 
-- (BOOL)isDone
-{
-	BOOL result = (fileOffset == fileLength);
-	
-//	HTTPLogTrace2(@"%@[%p]: isDone - %@", __FILE__, self, (result ? @"YES" : @"NO"));
-	
-	return result;
+- (NSData *)readDataOfLength:(NSUInteger)length {
+    //	HTTPLogTrace2(@"%@[%p]: readDataOfLength:%lu", __FILE__, self, (unsigned long)length);
+
+    if (data) {
+        NSUInteger dataLength = [data length];
+
+        // HTTPLogVerbose(@"%@[%p]: Returning data of length %lu", __FILE__, self, (unsigned long)dataLength);
+
+        fileOffset += dataLength;
+
+        NSData *result = data;
+        data = nil;
+
+        return result;
+    } else {
+        if (![self openFileIfNeeded]) {
+            // File opening failed,
+            // or response has been aborted due to another error.
+            return nil;
+        }
+
+        dispatch_sync(readQueue, ^{
+
+          NSAssert(readSourceSuspended, @"Invalid logic - perhaps HTTPConnection has changed.");
+
+          readRequestLength = length;
+          [self resumeReadSource];
+        });
+
+        return nil;
+    }
 }
 
-- (NSString *)filePath
-{
-	return filePath;
+- (BOOL)isDone {
+    BOOL result = (fileOffset == fileLength);
+
+    //	HTTPLogTrace2(@"%@[%p]: isDone - %@", __FILE__, self, (result ? @"YES" : @"NO"));
+
+    return result;
 }
 
-- (BOOL)isAsynchronous
-{
-	// HTTPLogTrace();
-	
-	return YES;
+- (NSString *)filePath {
+    return filePath;
 }
 
-- (void)connectionDidClose
-{
-	// HTTPLogTrace();
-	
-	if (fileFD != NULL_FD)
-	{
-		dispatch_sync(readQueue, ^{
-			
-			// Prevent any further calls to the connection
-			connection = nil;
-			
-			// Cancel the readSource.
-			// We do this here because the readSource's eventBlock has retained self.
-			// In other words, if we don't cancel the readSource, we will never get deallocated.
-			
-			[self cancelReadSource];
-		});
-	}
+- (BOOL)isAsynchronous {
+    // HTTPLogTrace();
+
+    return YES;
 }
 
-- (void)dealloc
-{
-	// HTTPLogTrace();
-	
-	#if !OS_OBJECT_USE_OBJC
-	if (readQueue) dispatch_release(readQueue);
-	#endif
-	
-	if (readBuffer)
-		free(readBuffer);
+- (void)connectionDidClose {
+    // HTTPLogTrace();
+
+    if (fileFD != NULL_FD) {
+        dispatch_sync(readQueue, ^{
+
+          // Prevent any further calls to the connection
+          connection = nil;
+
+          // Cancel the readSource.
+          // We do this here because the readSource's eventBlock has retained self.
+          // In other words, if we don't cancel the readSource, we will never get deallocated.
+
+          [self cancelReadSource];
+        });
+    }
+}
+
+- (void)dealloc {
+// HTTPLogTrace();
+
+#if !OS_OBJECT_USE_OBJC
+    if (readQueue)
+        dispatch_release(readQueue);
+#endif
+
+    if (readBuffer)
+        free(readBuffer);
 }
 
 @end
