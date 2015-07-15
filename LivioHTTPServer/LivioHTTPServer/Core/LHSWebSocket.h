@@ -30,7 +30,7 @@
 #import <Foundation/Foundation.h>
 
 @class LHSMessage;
-@class GCDAsyncSocket;
+@class STCPSocket;
 @protocol LHSWebSocketDelegate;
 
 static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
@@ -40,7 +40,7 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 	dispatch_queue_t websocketQueue;
 	
 	LHSMessage *request;
-	GCDAsyncSocket *asyncSocket;
+	STCPSocket *asyncSocket;
 	
 	NSData *term;
 	
@@ -52,7 +52,7 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 
 + (BOOL)isWebSocketRequest:(LHSMessage *)request;
 
-- (id)initWithRequest:(LHSMessage *)request socket:(GCDAsyncSocket *)socket;
+- (id)initWithRequest:(LHSMessage *)request socket:(STCPSocket *)socket;
 
 /**
  * Delegate option.

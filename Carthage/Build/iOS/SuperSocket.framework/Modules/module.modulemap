@@ -1,0 +1,6 @@
+framework module SuperSocket {
+  umbrella header "SuperSocket.h"
+
+  export *
+  module * { export * }
+}

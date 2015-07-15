@@ -29,7 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class GCDAsyncSocket;
+@class STCPSocket;
 @class LHSMessage;
 @class LHSServer;
 @class LHSWebSocket;
@@ -65,7 +65,7 @@
 @interface LHSConnection : NSObject
 {
 	dispatch_queue_t connectionQueue;
-	GCDAsyncSocket *asyncSocket;
+	STCPSocket *asyncSocket;
 	LHSConfig *config;
 	
 	BOOL started;
@@ -93,7 +93,7 @@
 	NSMutableArray *responseDataSizes;
 }
 
-- (id)initWithAsyncSocket:(GCDAsyncSocket *)newSocket configuration:(LHSConfig *)aConfig;
+- (id)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConfig *)aConfig;
 
 - (void)start;
 - (void)stop;

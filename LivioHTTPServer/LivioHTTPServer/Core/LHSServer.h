@@ -29,13 +29,13 @@
 
 #import <Foundation/Foundation.h>
 
-@class GCDAsyncSocket;
+@class STCPSocket;
 @class LHSWebSocket;
 
 @interface LHSServer : NSObject <NSNetServiceDelegate>
 {
 	// Underlying asynchronous TCP/IP socket
-	GCDAsyncSocket *asyncSocket;
+	STCPSocket *asyncSocket;
 	
 	// Dispatch queues
 	dispatch_queue_t serverQueue;

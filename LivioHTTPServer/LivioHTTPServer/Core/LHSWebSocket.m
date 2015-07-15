@@ -1,6 +1,7 @@
+
 #import "LHSWebSocket.h"
 #import "LHSMessage.h"
-#import <CocoaAsyncSocket/CocoaAsyncSocket.h>
+#import <SuperSocket/SuperSocket.h>
 #import "NSNumber+LHSNumber.h"
 #import "NSData+LHSData.h"
 
@@ -40,7 +41,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 }
 
 
-@interface LHSWebSocket ()
+@interface LHSWebSocket () <STCPSocketDelegate>
 
 - (void)readRequestBody;
 - (void)sendResponseBody:(NSData *)bodyData;
@@ -126,7 +127,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 
 @synthesize websocketQueue;
 
-- (id)initWithRequest:(LHSMessage *)aRequest socket:(GCDAsyncSocket *)socket
+- (id)initWithRequest:(LHSMessage *)aRequest socket:(STCPSocket *)socket
 {
 	// HTTPLogTrace();
 	
@@ -229,9 +230,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 	}});
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma mark HTTP Response
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)readRequestBody
 {
@@ -452,9 +452,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 //	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma mark Core Functionality
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)didOpen
 {
@@ -512,7 +511,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
         [data appendData:msgData];
     }
 	
-	// Remember: GCDAsyncSocket is thread-safe
+	// Remember: STCPSocket is thread-safe
 	[asyncSocket writeData:data withTimeout:LHSTimeoutNone tag:0];
 }
 
@@ -577,9 +576,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 	return YES;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark AsyncSocket Delegate
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#pragma mark SuperSocket Delegate
 
 // 0                   1                   2                   3
 // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -600,7 +598,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 // |                     Payload Data continued ...                |
 // +---------------------------------------------------------------+
 
-- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
+- (void)socket:(STCPSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
 	// HTTPLogTrace();
     
@@ -703,7 +701,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     }
 }
 
-- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)error
+- (void)socketDidDisconnect:(STCPSocket *)sock withError:(NSError *)error
 {
 //	HTTPLogTrace2(@"%@[%p]: socketDidDisconnect:withError: %@", __FILE__, self, error);
 	

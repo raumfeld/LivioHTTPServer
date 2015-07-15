@@ -1,10 +1,10 @@
-//  
-//  GCDAsyncSocket.h
-//  
+//
+//  STCPSocket.h
+//
 //  This class is in the public domain.
 //  Originally created by Robbie Hanson in Q3 2010.
 //  Updated and maintained by Deusty LLC and the Apple development community.
-//  
+//
 //  https://github.com/robbiehanson/CocoaAsyncSocket
 //
 
@@ -13,61 +13,60 @@
 #import <Security/SecureTransport.h>
 #import <dispatch/dispatch.h>
 #import <Availability.h>
-
 #include <sys/socket.h> // AF_INET, AF_INET6
 
-@class GCDAsyncReadPacket;
-@class GCDAsyncWritePacket;
-@class GCDAsyncSocketPreBuffer;
+#import "STCPSocketDelegate.h"
 
-extern NSString *const GCDAsyncSocketException;
-extern NSString *const GCDAsyncSocketErrorDomain;
+@class STCPReadPacket;
+@class STCPWritePacket;
+@class STCPSocketPreBuffer;
 
-extern NSString *const GCDAsyncSocketQueueName;
-extern NSString *const GCDAsyncSocketThreadName;
+extern NSString *const STCPSocketException;
+extern NSString *const STCPSocketErrorDomain;
 
-extern NSString *const GCDAsyncSocketManuallyEvaluateTrust;
+extern NSString *const STCPSocketQueueName;
+extern NSString *const STCPSocketThreadName;
+
+extern NSString *const STCPSocketManuallyEvaluateTrust;
 #if TARGET_OS_IPHONE
-extern NSString *const GCDAsyncSocketUseCFStreamForTLS;
+extern NSString *const STCPSocketUseCFStreamForTLS;
 #endif
-#define GCDAsyncSocketSSLPeerName     (NSString *)kCFStreamSSLPeerName
-#define GCDAsyncSocketSSLCertificates (NSString *)kCFStreamSSLCertificates
-#define GCDAsyncSocketSSLIsServer     (NSString *)kCFStreamSSLIsServer
-extern NSString *const GCDAsyncSocketSSLPeerID;
-extern NSString *const GCDAsyncSocketSSLProtocolVersionMin;
-extern NSString *const GCDAsyncSocketSSLProtocolVersionMax;
-extern NSString *const GCDAsyncSocketSSLSessionOptionFalseStart;
-extern NSString *const GCDAsyncSocketSSLSessionOptionSendOneByteRecord;
-extern NSString *const GCDAsyncSocketSSLCipherSuites;
+#define STCPSocketSSLPeerName (NSString *) kCFStreamSSLPeerName
+#define STCPSocketSSLCertificates (NSString *) kCFStreamSSLCertificates
+#define STCPSocketSSLIsServer (NSString *) kCFStreamSSLIsServer
+extern NSString *const STCPSocketSSLPeerID;
+extern NSString *const STCPSocketSSLProtocolVersionMin;
+extern NSString *const STCPSocketSSLProtocolVersionMax;
+extern NSString *const STCPSocketSSLSessionOptionFalseStart;
+extern NSString *const STCPSocketSSLSessionOptionSendOneByteRecord;
+extern NSString *const STCPSocketSSLCipherSuites;
 #if !TARGET_OS_IPHONE
-extern NSString *const GCDAsyncSocketSSLDiffieHellmanParameters;
+extern NSString *const STCPSocketSSLDiffieHellmanParameters;
 #endif
 
-#define GCDAsyncSocketLoggingContext 65535
+#define STCPSocketLoggingContext 65535
 
 
-enum GCDAsyncSocketError
-{
-	GCDAsyncSocketNoError = 0,           // Never used
-	GCDAsyncSocketBadConfigError,        // Invalid configuration
-	GCDAsyncSocketBadParamError,         // Invalid parameter was passed
-	GCDAsyncSocketConnectTimeoutError,   // A connect operation timed out
-	GCDAsyncSocketReadTimeoutError,      // A read operation timed out
-	GCDAsyncSocketWriteTimeoutError,     // A write operation timed out
-	GCDAsyncSocketReadMaxedOutError,     // Reached set maxLength without completing
-	GCDAsyncSocketClosedError,           // The remote peer closed the connection
-	GCDAsyncSocketOtherError,            // Description provided in userInfo
+typedef NS_ENUM(NSUInteger, STCPSocketError) {
+    STCPSocketErrorNone = 0,       // Never used
+    STCPSocketErrorBadConfig,      // Invalid configuration
+    STCPSocketErrorBadParam,       // Invalid parameter was passed
+    STCPSocketErrorConnectTimeout, // A connect operation timed out
+    STCPSocketErrorReadTimeout,    // A read operation timed out
+    STCPSocketErrorWriteTimeout,   // A write operation timed out
+    STCPSocketErrorReadMaxedOut,   // Reached set maxLength without completing
+    STCPSocketErrorClosed,         // The remote peer closed the connection
+    STCPSocketErrorOther,          // Description provided in userInfo
 };
-typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface GCDAsyncSocket : NSObject
+@interface STCPSocket : NSObject
 
 /**
- * GCDAsyncSocket uses the standard delegate paradigm,
+ * STCPSocket uses the standard delegate paradigm,
  * but executes all delegate callbacks on a given delegate dispatch queue.
  * This allows for maximum concurrency, while at the same time providing easy thread safety.
  * 
@@ -75,47 +74,47 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * use the socket, or you will get an error.
  * 
  * The socket queue is optional.
- * If you pass NULL, GCDAsyncSocket will automatically create it's own socket queue.
+ * If you pass NULL, STCPSocket will automatically create it's own socket queue.
  * If you choose to provide a socket queue, the socket queue must not be a concurrent queue.
  * If you choose to provide a socket queue, and the socket queue has a configured target queue,
  * then please see the discussion for the method markSocketQueueTargetQueue.
  * 
  * The delegate queue and socket queue can optionally be the same.
 **/
-- (id)init;
-- (id)initWithSocketQueue:(dispatch_queue_t)sq;
-- (id)initWithDelegate:(id)aDelegate delegateQueue:(dispatch_queue_t)dq;
-- (id)initWithDelegate:(id)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq;
+- (instancetype)init;
+- (instancetype)initWithSocketQueue:(dispatch_queue_t)sq;
+- (instancetype)initWithDelegate:(id<STCPSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq;
+- (instancetype)initWithDelegate:(id<STCPSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq NS_DESIGNATED_INITIALIZER;
 
 #pragma mark Configuration
 
-@property (atomic, weak, readwrite) id delegate;
+@property (atomic, weak, readwrite) id<STCPSocketDelegate> delegate;
 #if OS_OBJECT_USE_OBJC
 @property (atomic, strong, readwrite) dispatch_queue_t delegateQueue;
 #else
 @property (atomic, assign, readwrite) dispatch_queue_t delegateQueue;
 #endif
 
-- (void)getDelegate:(id *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr;
-- (void)setDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
+- (void)getDelegate:(id<STCPSocketDelegate> *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr;
+- (void)setDelegate:(id<STCPSocketDelegate>)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
 
 /**
  * If you are setting the delegate to nil within the delegate's dealloc method,
  * you may need to use the synchronous versions below.
 **/
-- (void)synchronouslySetDelegate:(id)delegate;
+- (void)synchronouslySetDelegate:(id<STCPSocketDelegate>)delegate;
 - (void)synchronouslySetDelegateQueue:(dispatch_queue_t)delegateQueue;
-- (void)synchronouslySetDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
+- (void)synchronouslySetDelegate:(id<STCPSocketDelegate>)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
 
 /**
  * By default, both IPv4 and IPv6 are enabled.
  * 
- * For accepting incoming connections, this means GCDAsyncSocket automatically supports both protocols,
+ * For accepting incoming connections, this means STCPSocket automatically supports both protocols,
  * and can simulataneously accept incoming connections on either protocol.
  * 
- * For outgoing connections, this means GCDAsyncSocket can connect to remote hosts running either protocol.
- * If a DNS lookup returns only IPv4 results, GCDAsyncSocket will automatically use IPv4.
- * If a DNS lookup returns only IPv6 results, GCDAsyncSocket will automatically use IPv6.
+ * For outgoing connections, this means STCPSocket can connect to remote hosts running either protocol.
+ * If a DNS lookup returns only IPv4 results, STCPSocket will automatically use IPv4.
+ * If a DNS lookup returns only IPv6 results, STCPSocket will automatically use IPv6.
  * If a DNS lookup returns both IPv4 and IPv6 results, the preferred protocol will be chosen.
  * By default, the preferred protocol is IPv4, but may be configured as desired.
 **/
@@ -135,7 +134,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 
 /**
  * Tells the socket to begin listening and accepting connections on the given port.
- * When a connection is accepted, a new instance of GCDAsyncSocket will be spawned to handle it,
+ * When a connection is accepted, a new instance of STCPSocket will be spawned to handle it,
  * and the socket:didAcceptNewSocket: delegate method will be invoked.
  * 
  * The socket will listen on all available interfaces (e.g. wifi, ethernet, etc)
@@ -285,7 +284,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * will be queued onto the delegateQueue asynchronously (behind any previously queued delegate methods).
  * In other words, the disconnected delegate method will be invoked sometime shortly after this method returns.
  * 
- * Please note the recommended way of releasing a GCDAsyncSocket instance (e.g. in a dealloc method)
+ * Please note the recommended way of releasing a STCPSocket instance (e.g. in a dealloc method)
  * [asyncSocket setDelegate:nil];
  * [asyncSocket disconnect];
  * [asyncSocket release];
@@ -337,10 +336,10 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * The host will be an IP address.
 **/
 @property (atomic, readonly) NSString *connectedHost;
-@property (atomic, readonly) uint16_t  connectedPort;
+@property (atomic, readonly) uint16_t connectedPort;
 
 @property (atomic, readonly) NSString *localHost;
-@property (atomic, readonly) uint16_t  localPort;
+@property (atomic, readonly) uint16_t localPort;
 
 /**
  * Returns the local or remote address to which this socket is connected,
@@ -371,15 +370,15 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 #pragma mark Reading
 
 // The readData and writeData methods won't block (they are asynchronous).
-// 
+//
 // When a read is complete the socket:didReadData:withTag: delegate method is dispatched on the delegateQueue.
 // When a write is complete the socket:didWriteDataWithTag: delegate method is dispatched on the delegateQueue.
-// 
+//
 // You may optionally set a timeout for any read/write operation. (To not timeout, use a negative time interval.)
 // If a read/write opertion times out, the corresponding "socket:shouldTimeout..." delegate method
 // is called to optionally allow you to extend the timeout.
 // Upon a timeout, the "socket:didDisconnectWithError:" method is called
-// 
+//
 // The tag is for your convenience.
 // You can use it as an array index, step number, state id, pointer, etc.
 
@@ -407,9 +406,9 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * the method [NSData dataWithBytesNoCopy:length:freeWhenDone:NO].
 **/
 - (void)readDataWithTimeout:(NSTimeInterval)timeout
-					 buffer:(NSMutableData *)buffer
-			   bufferOffset:(NSUInteger)offset
-						tag:(long)tag;
+                     buffer:(NSMutableData *)buffer
+               bufferOffset:(NSUInteger)offset
+                        tag:(long)tag;
 
 /**
  * Reads the first available bytes that become available on the socket.
@@ -532,7 +531,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * If maxLength is zero, no length restriction is enforced.
  * Otherwise if maxLength bytes are read without completing the read,
- * it is treated similarly to a timeout - the socket is closed with a GCDAsyncSocketReadMaxedOutError.
+ * it is treated similarly to a timeout - the socket is closed with a STCPSocketReadMaxedOutError.
  * The read will complete successfully if exactly maxLength bytes are read and the given data is found at the end.
  * 
  * If you pass nil or zero-length data as the "data" parameter,
@@ -565,7 +564,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * If maxLength is zero, no length restriction is enforced.
  * Otherwise if maxLength bytes are read without completing the read,
- * it is treated similarly to a timeout - the socket is closed with a GCDAsyncSocketReadMaxedOutError.
+ * it is treated similarly to a timeout - the socket is closed with a STCPSocketReadMaxedOutError.
  * The read will complete successfully if exactly maxLength bytes are read and the given data is found at the end.
  * 
  * If you pass a maxLength parameter that is less than the length of the data (separator) parameter,
@@ -616,7 +615,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * If the given data parameter is mutable (NSMutableData) then you MUST NOT alter the data while
  * the socket is writing it. In other words, it's not safe to alter the data until after the delegate method
  * socket:didWriteDataWithTag: is invoked signifying that this particular write operation has completed.
- * This is due to the fact that GCDAsyncSocket does NOT copy the data. It simply retains it.
+ * This is due to the fact that STCPSocket does NOT copy the data. It simply retains it.
  * This is for performance reasons. Often times, if NSMutableData is passed, it is because
  * a request/response was built up in memory. Copying this data adds an unwanted/unneeded overhead.
  * If you need to write data from an immutable buffer, and you need to alter the buffer before the socket
@@ -643,12 +642,12 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  *
  * ==== The available TOP-LEVEL KEYS are:
  * 
- * - GCDAsyncSocketManuallyEvaluateTrust
+ * - STCPSocketManuallyEvaluateTrust
  *     The value must be of type NSNumber, encapsulating a BOOL value.
  *     If you set this to YES, then the underlying SecureTransport system will not evaluate the SecTrustRef of the peer.
  *     Instead it will pause at the moment evaulation would typically occur,
  *     and allow us to handle the security evaluation however we see fit.
- *     So GCDAsyncSocket will invoke the delegate method socket:shouldTrustPeer: passing the SecTrustRef.
+ *     So STCPSocket will invoke the delegate method socket:shouldTrustPeer: passing the SecTrustRef.
  *
  *     Note that if you set this option, then all other configuration keys are ignored.
  *     Evaluation will be completely up to you during the socket:didReceiveTrust:completionHandler: delegate method.
@@ -659,18 +658,18 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  *     
  *     If unspecified, the default value is NO.
  *
- * - GCDAsyncSocketUseCFStreamForTLS (iOS only)
+ * - STCPSocketUseCFStreamForTLS (iOS only)
  *     The value must be of type NSNumber, encapsulating a BOOL value.
- *     By default GCDAsyncSocket will use the SecureTransport layer to perform encryption.
+ *     By default STCPSocket will use the SecureTransport layer to perform encryption.
  *     This gives us more control over the security protocol (many more configuration options),
  *     plus it allows us to optimize things like sys calls and buffer allocation.
  *     
- *     However, if you absolutely must, you can instruct GCDAsyncSocket to use the old-fashioned encryption
- *     technique by going through the CFStream instead. So instead of using SecureTransport, GCDAsyncSocket
+ *     However, if you absolutely must, you can instruct STCPSocket to use the old-fashioned encryption
+ *     technique by going through the CFStream instead. So instead of using SecureTransport, STCPSocket
  *     will instead setup a CFRead/CFWriteStream. And then set the kCFStreamPropertySSLSettings property
  *     (via CFReadStreamSetProperty / CFWriteStreamSetProperty) and will pass the given options to this method.
  *     
- *     Thus all the other keys in the given dictionary will be ignored by GCDAsyncSocket,
+ *     Thus all the other keys in the given dictionary will be ignored by STCPSocket,
  *     and will passed directly CFReadStreamSetProperty / CFWriteStreamSetProperty.
  *     For more infomation on these keys, please see the documentation for kCFStreamPropertySSLSettings.
  *
@@ -693,55 +692,55 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  *     This is optional for iOS. If not supplied, a NO value is the default.
  *     This is not needed for Mac OS X, and the value is ignored.
  *
- * - GCDAsyncSocketSSLPeerID
+ * - STCPSocketSSLPeerID
  *     The value must be of type NSData.
  *     You must set this value if you want to use TLS session resumption.
  *     See Apple's documentation for SSLSetPeerID.
  *
- * - GCDAsyncSocketSSLProtocolVersionMin
- * - GCDAsyncSocketSSLProtocolVersionMax
+ * - STCPSocketSSLProtocolVersionMin
+ * - STCPSocketSSLProtocolVersionMax
  *     The value(s) must be of type NSNumber, encapsulting a SSLProtocol value.
  *     See Apple's documentation for SSLSetProtocolVersionMin & SSLSetProtocolVersionMax.
  *     See also the SSLProtocol typedef.
  * 
- * - GCDAsyncSocketSSLSessionOptionFalseStart
+ * - STCPSocketSSLSessionOptionFalseStart
  *     The value must be of type NSNumber, encapsulating a BOOL value.
  *     See Apple's documentation for kSSLSessionOptionFalseStart.
  * 
- * - GCDAsyncSocketSSLSessionOptionSendOneByteRecord
+ * - STCPSocketSSLSessionOptionSendOneByteRecord
  *     The value must be of type NSNumber, encapsulating a BOOL value.
  *     See Apple's documentation for kSSLSessionOptionSendOneByteRecord.
  * 
- * - GCDAsyncSocketSSLCipherSuites
+ * - STCPSocketSSLCipherSuites
  *     The values must be of type NSArray.
  *     Each item within the array must be a NSNumber, encapsulating
  *     See Apple's documentation for SSLSetEnabledCiphers.
  *     See also the SSLCipherSuite typedef.
  *
- * - GCDAsyncSocketSSLDiffieHellmanParameters (Mac OS X only)
+ * - STCPSocketSSLDiffieHellmanParameters (Mac OS X only)
  *     The value must be of type NSData.
  *     See Apple's documentation for SSLSetDiffieHellmanParams.
  * 
  * ==== The following UNAVAILABLE KEYS are: (with throw an exception)
  * 
  * - kCFStreamSSLAllowsAnyRoot (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
+ *     You MUST use manual trust evaluation instead (see STCPSocketManuallyEvaluateTrust).
  *     Corresponding deprecated method: SSLSetAllowsAnyRoot
  * 
  * - kCFStreamSSLAllowsExpiredRoots (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
+ *     You MUST use manual trust evaluation instead (see STCPSocketManuallyEvaluateTrust).
  *     Corresponding deprecated method: SSLSetAllowsExpiredRoots
  *
  * - kCFStreamSSLAllowsExpiredCertificates (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
+ *     You MUST use manual trust evaluation instead (see STCPSocketManuallyEvaluateTrust).
  *     Corresponding deprecated method: SSLSetAllowsExpiredCerts
  *
  * - kCFStreamSSLValidatesCertificateChain (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
+ *     You MUST use manual trust evaluation instead (see STCPSocketManuallyEvaluateTrust).
  *     Corresponding deprecated method: SSLSetEnableCertVerify
  *
  * - kCFStreamSSLLevel (UNAVAILABLE)
- *     You MUST use GCDAsyncSocketSSLProtocolVersionMin & GCDAsyncSocketSSLProtocolVersionMin instead.
+ *     You MUST use STCPSocketSSLProtocolVersionMin & STCPSocketSSLProtocolVersionMin instead.
  *     Corresponding deprecated method: SSLSetProtocolVersionEnabled
  *
  * 
@@ -801,7 +800,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 @property (atomic, assign, readwrite) BOOL autoDisconnectOnClosedReadStream;
 
 /**
- * GCDAsyncSocket maintains thread safety by using an internal serial dispatch_queue.
+ * STCPSocket maintains thread safety by using an internal serial dispatch_queue.
  * In most cases, the instance creates this queue itself.
  * However, to allow for maximum flexibility, the internal queue may be passed in the init method.
  * This allows for some advanced options such as controlling socket priority via target queues.
@@ -853,7 +852,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * Additionally, networking traffic from a single IP cannot monopolize the module.
  * 
  * Here's how you would accomplish something like that:
- * - (dispatch_queue_t)newSocketQueueForConnectionFromAddress:(NSData *)address onSocket:(GCDAsyncSocket *)sock
+ * - (dispatch_queue_t)newSocketQueueForConnectionFromAddress:(NSData *)address onSocket:(STCPSocket *)sock
  * {
  *     dispatch_queue_t socketQueue = dispatch_queue_create("", NULL);
  *     dispatch_queue_t ipQueue = [self ipQueueForAddress:address];
@@ -863,7 +862,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  *     
  *     return socketQueue;
  * }
- * - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
+ * - (void)socket:(STCPSocket *)sock didAcceptNewSocket:(STCPSocket *)newSocket
  * {
  *     [clientConnections addObject:newSocket];
  *     [newSocket markSocketQueueTargetQueue:moduleQueue];
@@ -959,7 +958,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * Example usage:
  * 
- * - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port
+ * - (void)socket:(STCPSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port
  * {
  *     [asyncSocket performBlock:^{
  *         [asyncSocket enableBackgroundingOnSocket];
@@ -1010,170 +1009,11 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 /**
  * A few common line separators, for use with the readDataToData:... methods.
 **/
-+ (NSData *)CRLFData;   // 0x0D0A
-+ (NSData *)CRData;     // 0x0D
-+ (NSData *)LFData;     // 0x0A
-+ (NSData *)ZeroData;   // 0x00
++ (NSData *)CRLFData; // 0x0D0A
++ (NSData *)CRData;   // 0x0D
++ (NSData *)LFData;   // 0x0A
++ (NSData *)ZeroData; // 0x00
 
 @end
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@protocol GCDAsyncSocketDelegate
-@optional
-
-/**
- * This method is called immediately prior to socket:didAcceptNewSocket:.
- * It optionally allows a listening socket to specify the socketQueue for a new accepted socket.
- * If this method is not implemented, or returns NULL, the new accepted socket will create its own default queue.
- * 
- * Since you cannot autorelease a dispatch_queue,
- * this method uses the "new" prefix in its name to specify that the returned queue has been retained.
- * 
- * Thus you could do something like this in the implementation:
- * return dispatch_queue_create("MyQueue", NULL);
- * 
- * If you are placing multiple sockets on the same queue,
- * then care should be taken to increment the retain count each time this method is invoked.
- * 
- * For example, your implementation might look something like this:
- * dispatch_retain(myExistingQueue);
- * return myExistingQueue;
-**/
-- (dispatch_queue_t)newSocketQueueForConnectionFromAddress:(NSData *)address onSocket:(GCDAsyncSocket *)sock;
-
-/**
- * Called when a socket accepts a connection.
- * Another socket is automatically spawned to handle it.
- * 
- * You must retain the newSocket if you wish to handle the connection.
- * Otherwise the newSocket instance will be released and the spawned connection will be closed.
- * 
- * By default the new socket will have the same delegate and delegateQueue.
- * You may, of course, change this at any time.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket;
-
-/**
- * Called when a socket connects and is ready for reading and writing.
- * The host parameter will be an IP address, not a DNS name.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port;
-
-/**
- * Called when a socket has completed reading the requested data into memory.
- * Not called if there is an error.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag;
-
-/**
- * Called when a socket has read in data, but has not yet completed the read.
- * This would occur if using readToData: or readToLength: methods.
- * It may be used to for things such as updating progress bars.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength tag:(long)tag;
-
-/**
- * Called when a socket has completed writing the requested data. Not called if there is an error.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag;
-
-/**
- * Called when a socket has written some data, but has not yet completed the entire write.
- * It may be used to for things such as updating progress bars.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didWritePartialDataOfLength:(NSUInteger)partialLength tag:(long)tag;
-
-/**
- * Called if a read operation has reached its timeout without completing.
- * This method allows you to optionally extend the timeout.
- * If you return a positive time interval (> 0) the read's timeout will be extended by the given amount.
- * If you don't implement this method, or return a non-positive time interval (<= 0) the read will timeout as usual.
- * 
- * The elapsed parameter is the sum of the original timeout, plus any additions previously added via this method.
- * The length parameter is the number of bytes that have been read so far for the read operation.
- * 
- * Note that this method may be called multiple times for a single read if you return positive numbers.
-**/
-- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
-                                                                 elapsed:(NSTimeInterval)elapsed
-                                                               bytesDone:(NSUInteger)length;
-
-/**
- * Called if a write operation has reached its timeout without completing.
- * This method allows you to optionally extend the timeout.
- * If you return a positive time interval (> 0) the write's timeout will be extended by the given amount.
- * If you don't implement this method, or return a non-positive time interval (<= 0) the write will timeout as usual.
- * 
- * The elapsed parameter is the sum of the original timeout, plus any additions previously added via this method.
- * The length parameter is the number of bytes that have been written so far for the write operation.
- * 
- * Note that this method may be called multiple times for a single write if you return positive numbers.
-**/
-- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutWriteWithTag:(long)tag
-                                                                  elapsed:(NSTimeInterval)elapsed
-                                                                bytesDone:(NSUInteger)length;
-
-/**
- * Conditionally called if the read stream closes, but the write stream may still be writeable.
- * 
- * This delegate method is only called if autoDisconnectOnClosedReadStream has been set to NO.
- * See the discussion on the autoDisconnectOnClosedReadStream method for more information.
-**/
-- (void)socketDidCloseReadStream:(GCDAsyncSocket *)sock;
-
-/**
- * Called when a socket disconnects with or without error.
- * 
- * If you call the disconnect method, and the socket wasn't already disconnected,
- * then an invocation of this delegate method will be enqueued on the delegateQueue
- * before the disconnect method returns.
- * 
- * Note: If the GCDAsyncSocket instance is deallocated while it is still connected,
- * and the delegate is not also deallocated, then this method will be invoked,
- * but the sock parameter will be nil. (It must necessarily be nil since it is no longer available.)
- * This is a generally rare, but is possible if one writes code like this:
- * 
- * asyncSocket = nil; // I'm implicitly disconnecting the socket
- * 
- * In this case it may preferrable to nil the delegate beforehand, like this:
- * 
- * asyncSocket.delegate = nil; // Don't invoke my delegate method
- * asyncSocket = nil; // I'm implicitly disconnecting the socket
- * 
- * Of course, this depends on how your state machine is configured.
-**/
-- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err;
-
-/**
- * Called after the socket has successfully completed SSL/TLS negotiation.
- * This method is not called unless you use the provided startTLS method.
- * 
- * If a SSL/TLS negotiation fails (invalid certificate, etc) then the socket will immediately close,
- * and the socketDidDisconnect:withError: delegate method will be called with the specific SSL error code.
-**/
-- (void)socketDidSecure:(GCDAsyncSocket *)sock;
-
-/**
- * Allows a socket delegate to hook into the TLS handshake and manually validate the peer it's connecting to.
- *
- * This is only called if startTLS is invoked with options that include:
- * - GCDAsyncSocketManuallyEvaluateTrust == YES
- *
- * Typically the delegate will use SecTrustEvaluate (and related functions) to properly validate the peer.
- * 
- * Note from Apple's documentation:
- *   Because [SecTrustEvaluate] might look on the network for certificates in the certificate chain,
- *   [it] might block while attempting network access. You should never call it from your main thread;
- *   call it only from within a function running on a dispatch queue or on a separate thread.
- * 
- * Thus this method uses a completionHandler block rather than a normal return value.
- * The completionHandler block is thread-safe, and may be invoked from a background queue/thread.
- * It is safe to invoke the completionHandler block even if the socket has been closed.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didReceiveTrust:(SecTrustRef)trust
-                                    completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler;
-
-@end

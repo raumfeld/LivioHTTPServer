@@ -4,44 +4,60 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Headers/CocoaAsyncSocket.h</key>
+		<key>Headers/STCPSocket.h</key>
 		<data>
-		PO2xwwMeIbzHpA97zf0/ubU7kJ0=
+		z6okCt7lQjNSJcZ6CzoPuvftxwg=
 		</data>
-		<key>Headers/GCDAsyncSocket.h</key>
+		<key>Headers/STCPSocketDelegate.h</key>
 		<data>
-		lBperq18jwyFI/bJyENA1IVkLu8=
+		oZAeLxQa4TjzSR4qGsDA5FQzf6Y=
 		</data>
-		<key>Headers/GCDAsyncUdpSocket.h</key>
+		<key>Headers/SUDPSocket.h</key>
 		<data>
-		Y1cRZ2M8iTlwfJtTuK90ZpKd+ac=
+		zMujX8Ome5GutPcLVaPl1Y0Qrt0=
+		</data>
+		<key>Headers/SUDPSocketDelegate.h</key>
+		<data>
+		bvyBvblZQM2bZ9kVwdSjZs+kVFY=
+		</data>
+		<key>Headers/SuperSocket.h</key>
+		<data>
+		eo+A52ivOzs/3YiOU6xr2yt6EOE=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		9/jO9pZ+v7yZ4O2BhVUkcDEENzM=
+		Pfx+Jk7qF55k+XGkSmvq7qBlBgo=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		+n94rYTWDjekX3imyh+PSyA9vgA=
+		EzwBbL48TZ8OxgSTa/ze+1rdqVU=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Headers/CocoaAsyncSocket.h</key>
+		<key>Headers/STCPSocket.h</key>
 		<data>
-		PO2xwwMeIbzHpA97zf0/ubU7kJ0=
+		z6okCt7lQjNSJcZ6CzoPuvftxwg=
 		</data>
-		<key>Headers/GCDAsyncSocket.h</key>
+		<key>Headers/STCPSocketDelegate.h</key>
 		<data>
-		lBperq18jwyFI/bJyENA1IVkLu8=
+		oZAeLxQa4TjzSR4qGsDA5FQzf6Y=
 		</data>
-		<key>Headers/GCDAsyncUdpSocket.h</key>
+		<key>Headers/SUDPSocket.h</key>
 		<data>
-		Y1cRZ2M8iTlwfJtTuK90ZpKd+ac=
+		zMujX8Ome5GutPcLVaPl1Y0Qrt0=
+		</data>
+		<key>Headers/SUDPSocketDelegate.h</key>
+		<data>
+		bvyBvblZQM2bZ9kVwdSjZs+kVFY=
+		</data>
+		<key>Headers/SuperSocket.h</key>
+		<data>
+		eo+A52ivOzs/3YiOU6xr2yt6EOE=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		+n94rYTWDjekX3imyh+PSyA9vgA=
+		EzwBbL48TZ8OxgSTa/ze+1rdqVU=
 		</data>
 	</dict>
 	<key>rules</key>

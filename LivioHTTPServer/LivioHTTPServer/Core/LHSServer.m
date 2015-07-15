@@ -1,9 +1,10 @@
 #import "LHSServer.h"
-#import <CocoaAsyncSocket/CocoaAsyncSocket.h>
+#import <SuperSocket/SuperSocket.h>
 #import "LHSConnection.h"
 #import "LHSWebSocket.h"
 
-@interface LHSServer ()
+
+@interface LHSServer () <STCPSocketDelegate>
 
 - (void)unpublishBonjour;
 - (void)publishBonjour;
@@ -13,9 +14,8 @@
 
 @end
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma mark -
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @implementation LHSServer
 
@@ -42,7 +42,7 @@
 		dispatch_queue_set_specific(connectionQueue, IsOnConnectionQueueKey, nonNullUnusedPointer, NULL);
 		
 		// Initialize underlying GCD based tcp socket
-		asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue];
+		asyncSocket = [[STCPSocket alloc] initWithDelegate:self delegateQueue:serverQueue];
 		
 		// Use default connection class of HTTPConnection
 		connectionClass = [LHSConnection class];
@@ -535,7 +535,7 @@
 	return [[LHSConfig alloc] initWithServer:self documentRoot:documentRoot queue:connectionQueue];
 }
 
-- (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
+- (void)socket:(STCPSocket *)sock didAcceptNewSocket:(STCPSocket *)newSocket
 {
 	LHSConnection *newConnection = (LHSConnection *)[[connectionClass alloc] initWithAsyncSocket:newSocket
 	                                                                                 configuration:[self config]];
