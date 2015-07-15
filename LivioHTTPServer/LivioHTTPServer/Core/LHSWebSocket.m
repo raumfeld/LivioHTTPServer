@@ -53,7 +53,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 #pragma mark -
 
 @implementation LHSWebSocket {
-    BOOL isRFC6455;
     BOOL nextFrameMasked;
     NSUInteger nextOpCode;
     NSData *maskingKey;
@@ -105,16 +104,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     return isWebSocket;
 }
 
-// TODO: Assume everything is RFC6455
-+ (BOOL)isRFC6455Request:(LHSMessage *)request {
-    NSString *key = [request headerField:@"Sec-WebSocket-Key"];
-    BOOL isRFC6455 = (key != nil);
-    
-    //	HTTPLogTrace2(@"%@: %@ - %@", __FILE__, THIS_METHOD, (isRFC6455 ? @"YES" : @"NO"));
-    
-    return isRFC6455;
-}
-
 
 #pragma mark Setup and Teardown
 
@@ -143,7 +132,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
         [asyncSocket setDelegate:self delegateQueue:websocketQueue];
         
         isOpen = NO;
-        isRFC6455 = [[self class] isRFC6455Request:request];
         
         term = [[NSData alloc] initWithBytes:"\xFF" length:1];
     }
@@ -431,7 +419,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     // Don't forget to invoke [super didOpen] in your method.
     
     // Start reading for messages
-    [asyncSocket readDataToLength:1 withTimeout:LHSTimeoutNone tag:(isRFC6455 ? LHSTagPayloadPrefix : LHSTagPrefix)];
+    [asyncSocket readDataToLength:1 withTimeout:LHSTimeoutNone tag:LHSTagPayloadPrefix];
     
     // Notify delegate
     if ([delegate respondsToSelector:@selector(webSocketDidOpen:)]) {
