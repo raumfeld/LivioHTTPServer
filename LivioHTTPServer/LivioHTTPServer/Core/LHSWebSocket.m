@@ -40,7 +40,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     return frame & 0x7F;
 }
 
-
 @interface LHSWebSocket () <STCPSocketDelegate>
 
 - (void)readRequestBody;
@@ -57,6 +56,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     NSUInteger nextOpCode;
     NSData *maskingKey;
 }
+
+@synthesize delegate;
 
 + (BOOL)isWebSocketRequest:(LHSMessage *)request {
     // Request (Draft 75):
@@ -141,16 +142,11 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
 - (void)dealloc {
     // HTTPLogTrace();
     
-#if !OS_OBJECT_USE_OBJC
-    dispatch_release(websocketQueue);
-#endif
-    
-    [asyncSocket setDelegate:nil
-               delegateQueue:NULL];
+    [asyncSocket setDelegate:nil delegateQueue:NULL];
     [asyncSocket disconnect];
 }
 
-- (id)delegate {
+- (id<LHSWebSocketDelegate>)delegate {
     __block id result = nil;
     
     dispatch_sync(websocketQueue, ^{
@@ -160,7 +156,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     return result;
 }
 
-- (void)setDelegate:(id)newDelegate {
+- (void)setDelegate:(id<LHSWebSocketDelegate>)newDelegate {
     dispatch_async(websocketQueue, ^{
         delegate = newDelegate;
     });
@@ -422,8 +418,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     [asyncSocket readDataToLength:1 withTimeout:LHSTimeoutNone tag:LHSTagPayloadPrefix];
     
     // Notify delegate
-    if ([delegate respondsToSelector:@selector(webSocketDidOpen:)]) {
-        [delegate webSocketDidOpen:self];
+    if ([self.delegate respondsToSelector:@selector(webSocketDidOpen:)]) {
+        [self.delegate webSocketDidOpen:self];
     }
 }
 

@@ -102,13 +102,7 @@
     
     // Release all instance variables
     
-#if !OS_OBJECT_USE_OBJC
-    dispatch_release(serverQueue);
-    dispatch_release(connectionQueue);
-#endif
-    
-    [asyncSocket setDelegate:nil
-               delegateQueue:NULL];
+    [asyncSocket setDelegate:nil delegateQueue:NULL];
 }
 
 
@@ -655,26 +649,24 @@ static NSThread *bonjourThread;
     });
 }
 
-+ (void)bonjourThread {
-    @autoreleasepool {
-        // HTTPLogVerbose(@"%@: BonjourThread: Started", __FILE__);
-        
-        // We can't run the run loop unless it has an associated input source or a timer.
-        // So we'll just create a timer that will never fire - unless the server runs for 10,000 years.
++ (void)bonjourThread { @autoreleasepool {
+    // HTTPLogVerbose(@"%@: BonjourThread: Started", __FILE__);
+    
+    // We can't run the run loop unless it has an associated input source or a timer.
+    // So we'll just create a timer that will never fire - unless the server runs for 10,000 years.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-        [NSTimer scheduledTimerWithTimeInterval:[[NSDate distantFuture] timeIntervalSinceNow]
-                                         target:self
-                                       selector:@selector(donothingatall:)
-                                       userInfo:nil
-                                        repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:[[NSDate distantFuture] timeIntervalSinceNow]
+                                     target:self
+                                   selector:@selector(donothingatall:)
+                                   userInfo:nil
+                                    repeats:YES];
 #pragma clang diagnostic pop
-        
-        [[NSRunLoop currentRunLoop] run];
-        
-        // HTTPLogVerbose(@"%@: BonjourThread: Aborted", __FILE__);
-    }
-}
+    
+    [[NSRunLoop currentRunLoop] run];
+    
+    // HTTPLogVerbose(@"%@: BonjourThread: Aborted", __FILE__);
+}}
 
 + (void)executeBonjourBlock:(dispatch_block_t)block {
     // HTTPLogTrace();

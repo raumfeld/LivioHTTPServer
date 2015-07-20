@@ -203,21 +203,15 @@
     });
 
     int theFileFD = fileFD;
-#if !OS_OBJECT_USE_OBJC
-    dispatch_source_t theReadSource = readSource;
-#endif
 
     dispatch_source_set_cancel_handler(readSource, ^{
 
-// Do not access self from within this block in any way, shape or form.
-//
-// Note: You access self if you reference an iVar.
+      // Do not access self from within this block in any way, shape or form.
+      //
+      // Note: You access self if you reference an iVar.
 
-//		HTTPLogTrace2(@"%@: cancelBlock - Close fd[%i]", __FILE__, theFileFD);
+      //		HTTPLogTrace2(@"%@: cancelBlock - Close fd[%i]", __FILE__, theFileFD);
 
-#if !OS_OBJECT_USE_OBJC
-      dispatch_release(theReadSource);
-#endif
       close(theFileFD);
     });
 
@@ -344,15 +338,11 @@
 }
 
 - (void)dealloc {
-// HTTPLogTrace();
+    // HTTPLogTrace();
 
-#if !OS_OBJECT_USE_OBJC
-    if (readQueue)
-        dispatch_release(readQueue);
-#endif
-
-    if (readBuffer)
+    if (readBuffer) {
         free(readBuffer);
+    }
 }
 
 @end

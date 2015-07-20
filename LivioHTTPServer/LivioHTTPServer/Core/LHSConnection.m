@@ -2407,19 +2407,9 @@ static NSMutableArray *recentNonces;
         
         if (q) {
             queue = q;
-#if !OS_OBJECT_USE_OBJC
-            dispatch_retain(queue);
-#endif
         }
     }
     return self;
-}
-
-- (void)dealloc {
-#if !OS_OBJECT_USE_OBJC
-    if (queue)
-        dispatch_release(queue);
-#endif
 }
 
 @end
