@@ -5,6 +5,10 @@
 #import "NSNumber+LHSNumber.h"
 #import "NSData+LHSData.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#pragma clang diagnostic ignored "-Wunused-variable"
+
 static NSInteger const LHSTimeoutNone = -1;
 static NSInteger const LHSTimeoutRequestBody = 10;
 
@@ -39,6 +43,9 @@ static inline BOOL WS_PAYLOAD_IS_MASKED(UInt8 frame) {
 static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     return frame & 0x7F;
 }
+
+#pragma clang diagnostic pop
+
 
 @interface LHSWebSocket () <STCPSocketDelegate>
 

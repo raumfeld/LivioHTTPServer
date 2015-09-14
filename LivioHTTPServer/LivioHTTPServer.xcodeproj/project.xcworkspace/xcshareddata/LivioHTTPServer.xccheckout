@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>E59B854D-80BC-4287-AB2D-6DBBB0769098</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>LivioHTTPServer</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>71CFC0DE1DEFC877B0C5B9F98B971EBA2921D608</key>
 		<string>https://github.com/livio/LivioHTTPServer.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>LivioHTTPServer/LivioHTTPServer.xcodeproj/project.xcworkspace</string>
+	<string>LivioHTTPServer/LivioHTTPServer.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>71CFC0DE1DEFC877B0C5B9F98B971EBA2921D608</key>

@@ -6,19 +6,19 @@
 	<dict>
 		<key>Headers/STCPSocket.h</key>
 		<data>
-		z6okCt7lQjNSJcZ6CzoPuvftxwg=
+		GHwhHGp+OgNxOa4QXHH3CAFaAB4=
 		</data>
 		<key>Headers/STCPSocketDelegate.h</key>
 		<data>
-		oZAeLxQa4TjzSR4qGsDA5FQzf6Y=
+		uK+lb21Ob/sN19I4nZ4PI6I9lFs=
 		</data>
 		<key>Headers/SUDPSocket.h</key>
 		<data>
-		zMujX8Ome5GutPcLVaPl1Y0Qrt0=
+		Naz+LoEbKH7nclLooIaT2XEltiU=
 		</data>
 		<key>Headers/SUDPSocketDelegate.h</key>
 		<data>
-		bvyBvblZQM2bZ9kVwdSjZs+kVFY=
+		Xfj6i8RHd4WqSCcgcMP/QQFkv98=
 		</data>
 		<key>Headers/SuperSocket.h</key>
 		<data>
@@ -26,7 +26,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		Pfx+Jk7qF55k+XGkSmvq7qBlBgo=
+		1fTBQIsSK0CYKi+YfbUOC1TpbMI=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -37,19 +37,19 @@
 	<dict>
 		<key>Headers/STCPSocket.h</key>
 		<data>
-		z6okCt7lQjNSJcZ6CzoPuvftxwg=
+		GHwhHGp+OgNxOa4QXHH3CAFaAB4=
 		</data>
 		<key>Headers/STCPSocketDelegate.h</key>
 		<data>
-		oZAeLxQa4TjzSR4qGsDA5FQzf6Y=
+		uK+lb21Ob/sN19I4nZ4PI6I9lFs=
 		</data>
 		<key>Headers/SUDPSocket.h</key>
 		<data>
-		zMujX8Ome5GutPcLVaPl1Y0Qrt0=
+		Naz+LoEbKH7nclLooIaT2XEltiU=
 		</data>
 		<key>Headers/SUDPSocketDelegate.h</key>
 		<data>
-		bvyBvblZQM2bZ9kVwdSjZs+kVFY=
+		Xfj6i8RHd4WqSCcgcMP/QQFkv98=
 		</data>
 		<key>Headers/SuperSocket.h</key>
 		<data>
