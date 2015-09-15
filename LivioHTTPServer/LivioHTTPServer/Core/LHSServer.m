@@ -1,3 +1,5 @@
+
+#import "LHSConnectionConfig.h"
 #import "LHSServer.h"
 #import <SuperSocket/SuperSocket.h>
 #import "LHSConnection.h"
@@ -73,7 +75,7 @@
         // Register for notifications of closed connections
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(connectionDidDie:)
-                                                     name:HTTPConnectionDidDieNotification
+                                                     name:LHSHTTPConnectionDidDieNotification
                                                    object:nil];
         
         // Register for notifications of closed websocket connections
@@ -464,7 +466,7 @@
 
 #pragma mark Incoming Connections
 
-- (LHSConfig *)config {
+- (LHSConnectionConfig *)config {
     // Override me if you want to provide a custom config to the new connection.
     //
     // Generally this involves overriding the HTTPConfig class to include any custom settings,
@@ -476,7 +478,7 @@
     // Try the apache benchmark tool (already installed on your Mac):
     // $  ab -n 1000 -c 1 http://localhost:<port>/some_path.html
     
-    return [[LHSConfig alloc] initWithServer:self documentRoot:documentRoot queue:connectionQueue];
+    return [[LHSConnectionConfig alloc] initWithServer:self documentRoot:documentRoot queue:connectionQueue];
 }
 
 - (void)socket:(STCPSocket *)sock didAcceptNewSocket:(STCPSocket *)newSocket {

@@ -2,6 +2,7 @@
 #import <SuperSocket/SuperSocket.h>
 #import "LHSServer.h"
 #import "LHSConnection.h"
+#import "LHSConnectionConfig.h"
 #import "LHSMessage.h"
 #import "LHSResponse.h"
 #import "LHSAuthenticationRequest.h"
@@ -16,6 +17,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 #pragma clang diagnostic ignored "-Wunused-variable"
+
+static NSString *const LHSHTTPConnectionDidDieNotification = @"HTTPConnectionDidDie";
 
 // Define chunk size used to read in data for responses
 // This is how much data will be read from disk into RAM at a time
@@ -172,7 +175,7 @@ static NSMutableArray *recentNonces;
  * Associates this new HTTP connection with the given AsyncSocket.
  * This HTTP connection object will become the socket's delegate and take over responsibility for the socket.
  **/
-- (id)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConfig *)aConfig {
+- (id)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConnectionConfig *)aConfig {
     if ((self = [super init])) {
         // HTTPLogTrace();
         
@@ -241,11 +244,13 @@ static NSMutableArray *recentNonces;
     //
     // See also: expectsRequestBodyFromMethod:atPath:
     
-    if ([method isEqualToString:@"GET"])
+    if ([method isEqualToString:@"GET"]) {
         return YES;
+    }
     
-    if ([method isEqualToString:@"HEAD"])
+    if ([method isEqualToString:@"HEAD"]) {
         return YES;
+    }
     
     return NO;
 }
@@ -267,11 +272,13 @@ static NSMutableArray *recentNonces;
     //
     // See also: supportsMethod:atPath:
     
-    if ([method isEqualToString:@"POST"])
+    if ([method isEqualToString:@"POST"]) {
         return YES;
+    }
     
-    if ([method isEqualToString:@"PUT"])
+    if ([method isEqualToString:@"PUT"]) {
         return YES;
+    }
     
     return NO;
 }
@@ -2352,10 +2359,11 @@ static NSMutableArray *recentNonces;
         
         NSString *connection = [request headerField:@"Connection"];
         
-        if (connection == nil)
+        if (connection == nil) {
             shouldDie = YES;
-        else
+        } else {
             shouldDie = [connection caseInsensitiveCompare:@"Keep-Alive"] != NSOrderedSame;
+        }
     }
     
     return shouldDie;
@@ -2382,42 +2390,7 @@ static NSMutableArray *recentNonces;
     
     // Post notification of dead connection
     // This will allow our server to release us from its array of connections
-    [[NSNotificationCenter defaultCenter] postNotificationName:HTTPConnectionDidDieNotification object:self];
-}
-
-@end
-
-
-#pragma mark -
-
-@implementation LHSConfig
-
-@synthesize server;
-@synthesize documentRoot;
-@synthesize queue;
-
-- (id)initWithServer:(LHSServer *)aServer documentRoot:(NSString *)aDocumentRoot {
-    if ((self = [super init])) {
-        server = aServer;
-        documentRoot = aDocumentRoot;
-    }
-    return self;
-}
-
-- (id)initWithServer:(LHSServer *)aServer documentRoot:(NSString *)aDocumentRoot queue:(dispatch_queue_t)q {
-    if ((self = [super init])) {
-        server = aServer;
-        
-        documentRoot = [aDocumentRoot stringByStandardizingPath];
-        if ([documentRoot hasSuffix:@"/"]) {
-            documentRoot = [documentRoot stringByAppendingString:@"/"];
-        }
-        
-        if (q) {
-            queue = q;
-        }
-    }
-    return self;
+    [[NSNotificationCenter defaultCenter] postNotificationName:LHSHTTPConnectionDidDieNotification object:self];
 }
 
 @end

@@ -29,32 +29,15 @@
 
 #import <Foundation/Foundation.h>
 
-@class STCPSocket;
+@protocol LHSResponse;
+
+@class LHSConnectionConfig;
 @class LHSMessage;
 @class LHSServer;
 @class LHSWebSocket;
-@protocol LHSResponse;
+@class STCPSocket;
 
-
-#define HTTPConnectionDidDieNotification @"HTTPConnectionDidDie"
-
-
-#pragma mark -
-
-@interface LHSConfig : NSObject {
-    LHSServer __weak *server;
-    NSString __strong *documentRoot;
-    dispatch_queue_t queue;
-}
-
-- (id)initWithServer:(LHSServer *)server documentRoot:(NSString *)documentRoot;
-- (id)initWithServer:(LHSServer *)server documentRoot:(NSString *)documentRoot queue:(dispatch_queue_t)q;
-
-@property (nonatomic, weak, readonly) LHSServer *server;
-@property (nonatomic, strong, readonly) NSString *documentRoot;
-@property (nonatomic, readonly) dispatch_queue_t queue;
-
-@end
+static NSString *const LHSHTTPConnectionDidDieNotification;
 
 
 #pragma mark -
@@ -62,7 +45,7 @@
 @interface LHSConnection : NSObject {
     dispatch_queue_t connectionQueue;
     STCPSocket *asyncSocket;
-    LHSConfig *config;
+    LHSConnectionConfig *config;
 
     BOOL started;
 
@@ -89,7 +72,7 @@
     NSMutableArray *responseDataSizes;
 }
 
-- (id)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConfig *)aConfig;
+- (id)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConnectionConfig *)aConfig;
 
 - (void)start;
 - (void)stop;
