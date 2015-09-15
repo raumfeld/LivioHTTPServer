@@ -67,8 +67,8 @@
 		5D4834591A9E7B6900252386 /* LivioHTTPServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4834581A9E7B6900252386 /* LivioHTTPServerTests.m */; };
 		5D48345A1A9E7B6900252386 /* LivioHTTPServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D4833971A9E574400252386 /* LivioHTTPServer.framework */; };
 		5D77F9D71B56E20B0013F9A7 /* SuperSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D77F9D61B56E20B0013F9A7 /* SuperSocket.framework */; };
-		5D77FA3F1B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D77FA3E1B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h */; };
-		5D77FA401B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D77FA3E1B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h */; };
+		5D77FA3F1B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D77FA3E1B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D77FA401B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D77FA3E1B5D3ACF0013F9A7 /* LHSWebSocketDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

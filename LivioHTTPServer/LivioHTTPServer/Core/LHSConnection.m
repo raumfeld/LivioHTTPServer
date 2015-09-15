@@ -12,6 +12,11 @@
 #import "LHSAsyncFileResponse.h"
 #import "LHSWebSocket.h"
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#pragma clang diagnostic ignored "-Wunused-variable"
+
 // Define chunk size used to read in data for responses
 // This is how much data will be read from disk into RAM at a time
 #if TARGET_OS_IPHONE
@@ -65,6 +70,9 @@ static NSInteger const LHSHTTPPartialRangesResponseBody = 50;
 
 static NSInteger const LHSHTTPResponse = 90;
 static NSInteger const LHSHTTPFinalResponse = 91;
+
+#pragma clang diagnostic pop
+
 
 // A quick note about the tags:
 //
