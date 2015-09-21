@@ -175,7 +175,7 @@ static NSMutableArray *recentNonces;
  * Associates this new HTTP connection with the given AsyncSocket.
  * This HTTP connection object will become the socket's delegate and take over responsibility for the socket.
  **/
-- (id)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConnectionConfig *)aConfig {
+- (instancetype)initWithAsyncSocket:(STCPSocket *)newSocket configuration:(LHSConnectionConfig *)aConfig {
     if ((self = [super init])) {
         // HTTPLogTrace();
         
