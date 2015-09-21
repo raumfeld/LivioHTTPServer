@@ -8,6 +8,9 @@
 
 @interface LHSServer () <STCPSocketDelegate>
 
+@property (strong, atomic) NSMutableArray *mutableConnections;
+@property (strong, atomic) NSMutableArray *mutableWebSockets;
+
 - (void)unpublishBonjour;
 - (void)publishBonjour;
 
@@ -25,7 +28,7 @@
  * Standard Constructor.
  * Instantiates an HTTP server, but does not start it.
  **/
-- (id)init {
+- (instancetype)init {
     if ((self = [super init])) {
         // HTTPLogTrace();
         
@@ -66,8 +69,8 @@
         name = @"";
         
         // Initialize arrays to hold all the HTTP and webSocket connections
-        connections = [[NSMutableArray alloc] init];
-        webSockets = [[NSMutableArray alloc] init];
+        self.mutableConnections = [[NSMutableArray alloc] init];
+        self.mutableWebSockets = [[NSMutableArray alloc] init];
         
         connectionsLock = [[NSLock alloc] init];
         webSocketsLock = [[NSLock alloc] init];
@@ -85,7 +88,21 @@
                                                    object:nil];
         
         isRunning = NO;
+        
+        _delegate = nil;
     }
+    return self;
+}
+
+- (instancetype)initWithDelegate:(id<LHSServerDelegate>)delegate {
+    self = [self init];
+    
+    if (!self) {
+        return nil;
+    }
+    
+    _delegate = delegate;
+    
     return self;
 }
 
@@ -103,7 +120,6 @@
     [self stop];
     
     // Release all instance variables
-    
     [asyncSocket setDelegate:nil delegateQueue:NULL];
 }
 
@@ -353,10 +369,18 @@
     });
 }
 
+- (NSArray *)connections {
+    return [self.mutableConnections copy];
+}
+
+- (NSArray *)webSockets {
+    return [self.mutableWebSockets copy];
+}
+
 
 #pragma mark Server Control
 
-- (BOOL)start:(NSError **)errPtr {
+- (BOOL)start:(NSError *__autoreleasing *)errPtr {
     // HTTPLogTrace();
     
     __block BOOL success = YES;
@@ -374,8 +398,9 @@
         }
     }});
     
-    if (errPtr)
+    if (errPtr) {
         *errPtr = err;
+    }
     
     return success;
 }
@@ -398,21 +423,25 @@
         if (!keepExistingConnections) {
             // Stop all HTTP connections the server owns
             [connectionsLock lock];
-            for (LHSConnection *connection in connections) {
+            for (LHSConnection *connection in self.connections) {
                 [connection stop];
             }
-            [connections removeAllObjects];
+            [self.mutableConnections removeAllObjects];
             [connectionsLock unlock];
             
             // Stop all WebSocket connections the server owns
             [webSocketsLock lock];
-            for (LHSWebSocket *webSocket in webSockets) {
+            for (LHSWebSocket *webSocket in self.webSockets) {
                 [webSocket stop];
             }
-            [webSockets removeAllObjects];
+            [self.mutableWebSockets removeAllObjects];
             [webSocketsLock unlock];
         }
     }});
+    
+    if ([self.delegate respondsToSelector:@selector(serverDidStop:)]) {
+        [self.delegate serverDidStop:self];
+    }
 }
 
 - (BOOL)isRunning {
@@ -429,38 +458,13 @@
     [webSocketsLock lock];
     
     // HTTPLogTrace();
-    [webSockets addObject:ws];
+    [self.mutableWebSockets addObject:ws];
     
     [webSocketsLock unlock];
-}
-
-
-#pragma mark Server Status
-
-/**
- * Returns the number of http client connections that are currently connected to the server.
- **/
-- (NSUInteger)numberOfHTTPConnections {
-    NSUInteger result = 0;
     
-    [connectionsLock lock];
-    result = [connections count];
-    [connectionsLock unlock];
-    
-    return result;
-}
-
-/**
- * Returns the number of websocket client connections that are currently connected to the server.
- **/
-- (NSUInteger)numberOfWebSocketConnections {
-    NSUInteger result = 0;
-    
-    [webSocketsLock lock];
-    result = [webSockets count];
-    [webSocketsLock unlock];
-    
-    return result;
+    if ([self.delegate respondsToSelector:@selector(server:webSocketDidOpen:)]) {
+        [self.delegate server:self webSocketDidOpen:ws];
+    }
 }
 
 
@@ -485,10 +489,14 @@
     LHSConnection *newConnection = (LHSConnection *)[[connectionClass alloc] initWithAsyncSocket:newSocket
                                                                                    configuration:[self config]];
     [connectionsLock lock];
-    [connections addObject:newConnection];
+    [self.mutableConnections addObject:newConnection];
     [connectionsLock unlock];
     
     [newConnection start];
+    
+    if ([self.delegate respondsToSelector:@selector(server:connectionDidStart:)]) {
+        [self.delegate server:self connectionDidStart:newConnection];
+    }
 }
 
 
@@ -553,7 +561,6 @@
     // HTTPLogTrace();
     
     dispatch_async(serverQueue, ^{
-        
         [self unpublishBonjour];
         [self publishBonjour];
     });
@@ -568,7 +575,9 @@
     //
     // Note: This method is invoked on our bonjour thread.
     
-    NSLog(@"Bonjour Service Published: domain(%@) type(%@) name(%@)", [ns domain], [ns type], [ns name]);
+    if ([self.delegate respondsToSelector:@selector(server:bonjourDidPublish:)]) {
+        [self.delegate server:self bonjourDidPublish:ns];
+    }
 }
 
 /**
@@ -580,11 +589,9 @@
     //
     // Note: This method in invoked on our bonjour thread.
     
-    NSLog(@"Failed to Publish Service: domain(%@) type(%@) name(%@) - %@",
-          [ns domain],
-          [ns type],
-          [ns name],
-          errorDict);
+    if ([self.delegate respondsToSelector:@selector(server:bonjourPublishFailed:error:)]) {
+        [self.delegate server:self bonjourPublishFailed:ns error:errorDict];
+    }
 }
 
 
@@ -600,9 +607,13 @@
     [connectionsLock lock];
     
     // HTTPLogTrace();
-    [connections removeObject:[notification object]];
+    [self.mutableConnections removeObject:[notification object]];
     
     [connectionsLock unlock];
+    
+    if ([self.delegate respondsToSelector:@selector(server:connectionDidClose:)]) {
+        [self.delegate server:self connectionDidClose:notification.object];
+    }
 }
 
 /**
@@ -615,9 +626,13 @@
     [webSocketsLock lock];
     
     // HTTPLogTrace();
-    [webSockets removeObject:[notification object]];
+    [self.mutableWebSockets removeObject:[notification object]];
     
     [webSocketsLock unlock];
+    
+    if ([self.delegate respondsToSelector:@selector(server:webSocketDidClose:)]) {
+        [self.delegate server:self webSocketDidClose:notification.object];
+    }
 }
 
 

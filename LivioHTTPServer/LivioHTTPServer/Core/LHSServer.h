@@ -29,6 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "LHSServerDelegate.h"
+
 @class STCPSocket;
 @class LHSWebSocket;
 
@@ -57,13 +59,19 @@
     NSDictionary *txtRecordDictionary;
 
     // Connection management
-    NSMutableArray *connections;
-    NSMutableArray *webSockets;
     NSLock *connectionsLock;
     NSLock *webSocketsLock;
 
     BOOL isRunning;
 }
+
+@property (weak, nonatomic) id<LHSServerDelegate> delegate;
+
+@property (copy, nonatomic, readonly) NSArray *connections;
+@property (copy, nonatomic, readonly) NSArray *webSockets;
+
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDelegate:(id<LHSServerDelegate>)delegate;
 
 /**
  * Specifies the document root to serve files from.
@@ -211,8 +219,5 @@
 - (BOOL)isRunning;
 
 - (void)addWebSocket:(LHSWebSocket *)ws;
-
-- (NSUInteger)numberOfHTTPConnections;
-- (NSUInteger)numberOfWebSocketConnections;
 
 @end

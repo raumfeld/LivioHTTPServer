@@ -50,7 +50,7 @@ static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
 
 + (BOOL)isWebSocketRequest:(LHSMessage *)request;
 
-- (id)initWithRequest:(LHSMessage *)request socket:(STCPSocket *)socket;
+- (instancetype)initWithRequest:(LHSMessage *)request socket:(STCPSocket *)socket;
 
 /**
  * Delegate option.
