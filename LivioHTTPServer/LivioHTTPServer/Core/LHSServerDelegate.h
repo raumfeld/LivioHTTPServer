@@ -13,6 +13,8 @@
 @class LHSWebSocket;
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol LHSServerDelegate <NSObject>
 
 @optional
@@ -28,3 +30,5 @@
 - (void)server:(LHSServer *)server webSocketDidClose:(LHSWebSocket *)socket;
 
 @end
+
+NS_ASSUME_NONNULL_END

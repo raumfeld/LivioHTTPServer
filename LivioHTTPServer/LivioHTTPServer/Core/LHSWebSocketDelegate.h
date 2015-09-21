@@ -10,6 +10,8 @@
 
 @class LHSWebSocket;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * There are two ways to create your own custom WebSocket:
  *
@@ -29,3 +31,5 @@
 - (void)webSocketDidClose:(LHSWebSocket *)ws;
 
 @end
+
+NS_ASSUME_NONNULL_END
