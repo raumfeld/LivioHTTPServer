@@ -37,7 +37,7 @@
 @class LHSWebSocket;
 @class STCPSocket;
 
-static NSString *const LHSHTTPConnectionDidDieNotification;
+extern NSString *const LHSHTTPConnectionDidDieNotification;
 
 
 #pragma mark -

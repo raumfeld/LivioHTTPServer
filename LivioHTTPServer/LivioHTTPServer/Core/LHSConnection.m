@@ -18,7 +18,7 @@
 #pragma clang diagnostic ignored "-Wunused-function"
 #pragma clang diagnostic ignored "-Wunused-variable"
 
-static NSString *const LHSHTTPConnectionDidDieNotification = @"HTTPConnectionDidDie";
+NSString *const LHSHTTPConnectionDidDieNotification = @"LHSHTTPConnectionDidDie";
 
 // Define chunk size used to read in data for responses
 // This is how much data will be read from disk into RAM at a time
