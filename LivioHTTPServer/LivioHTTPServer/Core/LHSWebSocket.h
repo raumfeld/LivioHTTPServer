@@ -34,7 +34,7 @@
 @class LHSMessage;
 @class STCPSocket;
 
-static NSString *const LHSWebSocketDidDieNotification = @"WebSocketDidDie";
+extern NSString *const LHSWebSocketDidDieNotification;
 
 @interface LHSWebSocket : NSObject {
     dispatch_queue_t websocketQueue;

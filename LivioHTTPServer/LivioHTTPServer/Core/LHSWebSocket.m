@@ -5,6 +5,8 @@
 #import "NSNumber+LHSNumber.h"
 #import "NSData+LHSData.h"
 
+NSString *const LHSWebSocketDidDieNotification  = @"LHSWebSocketDidDie";
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 #pragma clang diagnostic ignored "-Wunused-variable"
