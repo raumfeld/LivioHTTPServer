@@ -58,7 +58,7 @@ extern NSString *const LHSWebSocketDidDieNotification;
  * In most cases it will be easier to subclass WebSocket,
  * but some circumstances may lead one to prefer standard delegate callbacks instead.
 **/
-@property (nonatomic, weak) id<LHSWebSocketDelegate> delegate;
+@property (weak, nonatomic) id<LHSWebSocketDelegate> delegate;
 
 /**
  * The WebSocket class is thread-safe, generally via it's GCD queue.

@@ -153,8 +153,6 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     
     [asyncSocket setDelegate:nil delegateQueue:NULL];
     [asyncSocket disconnect];
-    
-    [self didClose];
 }
 
 - (id<LHSWebSocketDelegate>)delegate {
@@ -167,9 +165,9 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     return result;
 }
 
-- (void)setDelegate:(id<LHSWebSocketDelegate>)newDelegate {
+- (void)setDelegate:(id<LHSWebSocketDelegate>)aDelegate {
     dispatch_async(websocketQueue, ^{
-        delegate = newDelegate;
+        delegate = aDelegate;
     });
 }
 
