@@ -153,6 +153,8 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     
     [asyncSocket setDelegate:nil delegateQueue:NULL];
     [asyncSocket disconnect];
+    
+    [self didClose];
 }
 
 - (id<LHSWebSocketDelegate>)delegate {
