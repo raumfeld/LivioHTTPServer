@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5D10E50A1BB0520200E9A728 /* LHSServerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D10E5091BB0520200E9A728 /* LHSServerDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D10E5B21BB3256500E9A728 /* SuperSocket.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = 5D10E5B11BB3256500E9A728 /* SuperSocket.framework.dSYM */; settings = {ASSET_TAGS = (); }; };
+		5D10E5B51BB3258C00E9A728 /* SuperSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5D10E5B11BB3256500E9A728 /* SuperSocket.framework.dSYM */; };
 		5D38109D1BA8927600B41AE3 /* LHSConnectionConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D38109B1BA8927600B41AE3 /* LHSConnectionConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D38109E1BA8927600B41AE3 /* LHSConnectionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D38109C1BA8927600B41AE3 /* LHSConnectionConfig.m */; settings = {ASSET_TAGS = (); }; };
 		5D3CD6C31AA0F4B300987CC1 /* LivioHTTPServer-Mac.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3CD6C21AA0F4B300987CC1 /* LivioHTTPServer-Mac.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -91,8 +93,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		5D10E5B41BB3258500E9A728 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				5D10E5B51BB3258C00E9A728 /* SuperSocket.framework.dSYM in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		5D10E5091BB0520200E9A728 /* LHSServerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LHSServerDelegate.h; path = LivioHTTPServer/Core/LHSServerDelegate.h; sourceTree = SOURCE_ROOT; };
+		5D10E5B11BB3256500E9A728 /* SuperSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SuperSocket.framework.dSYM; path = ../Carthage/Build/iOS/SuperSocket.framework.dSYM; sourceTree = "<group>"; };
 		5D38109B1BA8927600B41AE3 /* LHSConnectionConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LHSConnectionConfig.h; path = LivioHTTPServer/Core/LHSConnectionConfig.h; sourceTree = SOURCE_ROOT; };
 		5D38109C1BA8927600B41AE3 /* LHSConnectionConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LHSConnectionConfig.m; path = LivioHTTPServer/Core/LHSConnectionConfig.m; sourceTree = SOURCE_ROOT; };
 		5D3CD6BE1AA0F4B300987CC1 /* LivioHTTPServer_Mac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LivioHTTPServer_Mac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +197,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5D10E5B31BB3256900E9A728 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5D10E5B11BB3256500E9A728 /* SuperSocket.framework.dSYM */,
+				5D77F9D61B56E20B0013F9A7 /* SuperSocket.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5D3CD6BF1AA0F4B300987CC1 /* LivioHTTPServer-Mac */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,11 +243,11 @@
 		5D48338D1A9E574400252386 = {
 			isa = PBXGroup;
 			children = (
-				5D77F9D61B56E20B0013F9A7 /* SuperSocket.framework */,
 				5D4833991A9E574400252386 /* LivioHTTPServer */,
 				5D4834551A9E7B6900252386 /* LivioHTTPServerTests */,
 				5D3CD6BF1AA0F4B300987CC1 /* LivioHTTPServer-Mac */,
 				5D3CD6CC1AA0F4B300987CC1 /* LivioHTTPServer-MacTests */,
+				5D10E5B31BB3256900E9A728 /* Frameworks */,
 				5D4833981A9E574400252386 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -477,6 +502,8 @@
 				5D4833931A9E574400252386 /* Frameworks */,
 				5D4833941A9E574400252386 /* Headers */,
 				5D4833951A9E574400252386 /* Resources */,
+				5D10E5B41BB3258500E9A728 /* CopyFiles */,
+				5D10E5B61BB3259000E9A728 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -567,6 +594,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D10E5B21BB3256500E9A728 /* SuperSocket.framework.dSYM in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,6 +606,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D10E5B61BB3259000E9A728 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../Carthage/Build/iOS/SuperSocket.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5D3CD6B91AA0F4B300987CC1 /* Sources */ = {
