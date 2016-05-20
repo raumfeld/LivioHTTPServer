@@ -1,7 +1,7 @@
 
 #import "LHSConnectionConfig.h"
 #import "LHSServer.h"
-#import <CocoaAsyncSocket/GCDAsyncSocket.h>
+#import "GCDAsyncSocket.h"
 #import "LHSConnection.h"
 #import "LHSWebSocket.h"
 

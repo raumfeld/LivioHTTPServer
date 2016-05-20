@@ -1,7 +1,7 @@
 
 #import "LHSWebSocket.h"
 #import "LHSMessage.h"
-#import <CocoaAsyncSocket/GCDAsyncSocket.h>
+#import "GCDAsyncSocket.h"
 #import "NSNumber+LHSNumber.h"
 #import "NSData+LHSData.h"
 
@@ -103,7 +103,7 @@ static inline NSUInteger WS_PAYLOAD_LENGTH(UInt8 frame) {
     
     if (!upgradeHeaderValue || !connectionHeaderValue) {
         isWebSocket = NO;
-    } else if (![upgradeHeaderValue caseInsensitiveCompare:@"WebSocket"] == NSOrderedSame) {
+    } else if (!([upgradeHeaderValue caseInsensitiveCompare:@"WebSocket"] == NSOrderedSame)) {
         isWebSocket = NO;
     } else if ([connectionHeaderValue rangeOfString:@"Upgrade" options:NSCaseInsensitiveSearch].location == NSNotFound) {
         isWebSocket = NO;
