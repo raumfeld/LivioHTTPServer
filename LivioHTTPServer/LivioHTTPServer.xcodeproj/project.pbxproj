@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		5D10E50A1BB0520200E9A728 /* LHSServerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D10E5091BB0520200E9A728 /* LHSServerDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5D1665101CEF5AE700CC4CA1 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650C1CEF5AE700CC4CA1 /* GCDAsyncSocket.h */; };
+		5D1665101CEF5AE700CC4CA1 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650C1CEF5AE700CC4CA1 /* GCDAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D1665111CEF5AE700CC4CA1 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D16650D1CEF5AE700CC4CA1 /* GCDAsyncSocket.m */; };
 		5D1665121CEF5AE700CC4CA1 /* GCDAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650E1CEF5AE700CC4CA1 /* GCDAsyncUdpSocket.h */; };
 		5D1665131CEF5AE700CC4CA1 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D16650F1CEF5AE700CC4CA1 /* GCDAsyncUdpSocket.m */; };
-		5D1665141CEF5AF000CC4CA1 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650C1CEF5AE700CC4CA1 /* GCDAsyncSocket.h */; };
+		5D1665141CEF5AF000CC4CA1 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650C1CEF5AE700CC4CA1 /* GCDAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D1665161CEF5AFB00CC4CA1 /* GCDAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650E1CEF5AE700CC4CA1 /* GCDAsyncUdpSocket.h */; };
 		5D1665251CEF7F1A00CC4CA1 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D16650D1CEF5AE700CC4CA1 /* GCDAsyncSocket.m */; };
 		5D1665261CEF7F1A00CC4CA1 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D16650F1CEF5AE700CC4CA1 /* GCDAsyncUdpSocket.m */; };
@@ -49,7 +49,7 @@
 		5D1665461CEF7F6E00CC4CA1 /* LHSWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D48343A1A9E6A6D00252386 /* LHSWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D1665471CEF7F6E00CC4CA1 /* LHSConnectionConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D38109B1BA8927600B41AE3 /* LHSConnectionConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D1665481CEF7F6E00CC4CA1 /* LivioHTTPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834471A9E6A8200252386 /* LivioHTTPServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5D1665491CEF7F8900CC4CA1 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650C1CEF5AE700CC4CA1 /* GCDAsyncSocket.h */; };
+		5D1665491CEF7F8900CC4CA1 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650C1CEF5AE700CC4CA1 /* GCDAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D16654A1CEF7F8900CC4CA1 /* GCDAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D16650E1CEF5AE700CC4CA1 /* GCDAsyncUdpSocket.h */; };
 		5D16654B1CEF7F8900CC4CA1 /* NSData+LHSData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834011A9E6A3900252386 /* NSData+LHSData.h */; };
 		5D16654C1CEF7F8900CC4CA1 /* NSNumber+LHSNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4834031A9E6A3900252386 /* NSNumber+LHSNumber.h */; };
@@ -1098,6 +1098,7 @@
 				5D1665241CEF7E9200CC4CA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5D3CD6D11AA0F4B300987CC1 /* Build configuration list for PBXNativeTarget "LivioHTTPServer-Mac" */ = {
 			isa = XCConfigurationList;
