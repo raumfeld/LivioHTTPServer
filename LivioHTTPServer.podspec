@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
   s.platform = :ios, '5.0'
   s.requires_arc = true
-  s.source_files = ['LivioHTTPServer/LivioHTTPServer/**/*']
+  s.source_files = ['LivioHTTPServer/LivioHTTPServer/**/*.{h,m,swift}']
 
   s.libraries = 'xml2'
   s.ios.frameworks = 'CFNetwork', 'Security'
